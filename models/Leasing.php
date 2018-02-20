@@ -24,28 +24,28 @@ use Yii;
  * @property Users $users
  * @property Receipt[] $receipts
  */
-class Leasing extends \yii\db\ActiveRecord
-{
+class Leasing extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'leasing';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'move_in', 'users_id', 'rooms_id', 'customers_id', 'leasing_date'], 'required'],
             [['move_in', 'move_out', 'leasing_date'], 'safe'],
             [['users_id', 'rooms_id', 'customers_id', 'deposit'], 'integer'],
             [['status', 'comment'], 'string'],
-            [['id'], 'string', 'max' => 25],
+            [['id', 'leasing_code'], 'string', 'max' => 25],
             [['id'], 'unique'],
+            [['move_in', 'users_id', 'rooms_id', 'customers_id', 'status', 'comment', 'deposit', 'leasing_date'], 'required', 'on' => 'checkin'],
+            [['move_out', 'rooms_id', 'customers_id'], 'required', 'on' => 'checkout'],
             [['customers_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customers_id' => 'id']],
             [['rooms_id'], 'exist', 'skipOnError' => true, 'targetClass' => Rooms::className(), 'targetAttribute' => ['rooms_id' => 'id']],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
@@ -55,15 +55,15 @@ class Leasing extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
-            'id' => 'ID',
+            'id' => 'เลขเอกสาร',
+            'leasing_code' => 'เลขที่สัญญา',
             'move_in' => 'วันที่ย้ายเข้า',
             'move_out' => 'วันที่ย้ายออก',
-            'users_id' => 'Users ID',
-            'rooms_id' => 'Rooms ID',
-            'customers_id' => 'Customers ID',
+            'users_id' => 'ผู้บันทึก',
+            'rooms_id' => 'หมายเลขห้อง',
+            'customers_id' => 'ผู้เช่า',
             'leasing_date' => 'วันที่บันทึก',
             'status' => 'สถานะสัญญาเช่า',
             'comment' => 'หมายเหตุ',
@@ -71,43 +71,45 @@ class Leasing extends \yii\db\ActiveRecord
         ];
     }
 
+    public function scenarios() {
+        $sn = parent::scenarios();
+        $sn['checkin'] = ['id','move_in', 'rooms_id', 'customers_id', 'status', 'deposit'];
+        $sn['checkout'] = ['move_out', 'status'];
+        return $sn;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInvoices()
-    {
+    public function getInvoices() {
         return $this->hasMany(Invoice::className(), ['leasing_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCustomers()
-    {
+    public function getCustomers() {
         return $this->hasOne(Customers::className(), ['id' => 'customers_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRooms()
-    {
+    public function getRooms() {
         return $this->hasOne(Rooms::className(), ['id' => 'rooms_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
-    {
+    public function getUsers() {
         return $this->hasOne(Users::className(), ['id' => 'users_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getReceipts()
-    {
+    public function getReceipts() {
         return $this->hasMany(Receipt::className(), ['leasing_id' => 'id']);
     }
 
@@ -115,8 +117,18 @@ class Leasing extends \yii\db\ActiveRecord
      * {@inheritdoc}
      * @return LeasingQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new LeasingQuery(get_called_class());
     }
+    
+    public function checkRooms($id){
+        $get = Leasing::find()->select('id')->where(['rooms_id' => $id, 'status' => 'IN'])->one();
+        //die(print_r($get));
+        if($get === NULL){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

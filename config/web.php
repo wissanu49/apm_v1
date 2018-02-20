@@ -11,8 +11,8 @@ $config = [
     'basePath' => dirname(__DIR__),
     'name' => 'โปรแกรมหอพัก',
     'bootstrap' => ['log'],
-    'defaultRoute' => 'site/index',
-    'language' => 'th_TH',
+    'defaultRoute' => 'site',
+    'language' => 'th',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
@@ -33,7 +33,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\Users',
             'enableAutoLogin' => false,
             //'authTimeout' => 900,
             'identityCookie' => ['name' => '_identity', 'httpOnly' => true],

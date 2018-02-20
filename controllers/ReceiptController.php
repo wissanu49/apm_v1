@@ -8,6 +8,7 @@ use app\Models\SearchReceipt;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ReceiptController implements the CRUD actions for Receipt model.
@@ -20,6 +21,17 @@ class ReceiptController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'update', 'delete', 'create'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'update', 'delete', 'create'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

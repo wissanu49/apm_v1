@@ -36,7 +36,7 @@ class Rooms extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'monthly_price', 'building_id'], 'required'],
-            [['monthly_price', 'building_id'], 'integer'],
+            [['monthly_price', 'building_id', 'deposit'], 'integer'],
             [['details', 'type'], 'string'],
             [['name', 'daily_price'], 'string', 'max' => 45],
             [['name'], 'unique'],
@@ -56,6 +56,7 @@ class Rooms extends \yii\db\ActiveRecord
             'details' => 'รายละเอียดห้อง',
             'type' => 'ประเภทห้อง',
             'daily_price' => 'ราคารายวัน',
+            'deposit' => 'ประกันห้อง',
             'building_id' => 'ตึก/อาคาร',
         ];
     }

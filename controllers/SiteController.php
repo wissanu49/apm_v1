@@ -20,12 +20,18 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['index','error','logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['index','error','logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                         
+                    ],
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'roles' => ['?'],                         
                     ],
                 ],
             ],
@@ -80,7 +86,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model->password = '';
+        //$model->password = '';
         return $this->render('login', [
             'model' => $model,
         ]);

@@ -18,7 +18,9 @@ use app\models\Building;
 
     <?= $form->field($model, 'monthly_price')->textInput(['placeholder' => 'ค่าเช่าต่อเดือน']) ?>
 
-    <?= $form->field($model, 'details')->textarea(['rows' => 6, 'placeholder' => 'รายละเอียด']) ?>
+    <?= $form->field($model, 'deposit')->textInput(['placeholder' => 'ค่าประกันห้อง [เว้นว่างได้]']) ?>
+
+    <?= $form->field($model, 'details')->textarea(['rows' => 6, 'placeholder' => 'รายละเอียด [เว้นว่างได้]']) ?>
 
     <?= $form->field($model, 'type')->dropDownList([ 'ห้องพัดลม' => 'ห้องพัดลม', 'ห้องแอร์' => 'ห้องแอร์', ]) ?>
 

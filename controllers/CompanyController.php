@@ -8,6 +8,7 @@ use app\Models\SearchCompany;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -20,6 +21,23 @@ class CompanyController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'update', 'delete', 'create'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'update', 'delete', 'create'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->identity->role === 'admin') {
+                                return true;
+                            }
+                            return false;
+                        },
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

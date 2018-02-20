@@ -57,7 +57,7 @@ Modal::end();
                             'label' => 'บริหารห้องพัก',
                             'format' => 'raw',
                             'value' => function($data) {
-                                return Html::a(' บริหารห้องพัก', ['building/rooms', 'id' => $data['id']], ['title' => 'บริหารห้องพัก : ' . $data['building_name'],
+                                return Html::a(' บริหารห้องพัก', ['rooms/building', 'id' => $data['id']], ['title' => 'บริหารห้องพัก : ' . $data['building_name'],
                                             //'id' => 'showModalButton',
                                             'class' => 'btn btn-info fa fa-bed']);
                             }

@@ -75,14 +75,23 @@ Modal::end();
                         [
                             'attribute' => 'monthly_price',
                             //'filter' => ArrayHelper::map(app\models\Customers::find()->all(), 'id', 'fullname'), //กำหนด filter แบบ dropDownlist จากข้อมูล ใน field แบบ foreignKey
+                            'filter' => false,
                             'value' => function($model) {
                                 return Yii::$app->formatter->asDecimal($model->monthly_price);
+                            }
+                        ],
+                        [
+                            'attribute' => 'deposit',
+                            'filter' => false,
+                            //'filter' => ArrayHelper::map(app\models\Customers::find()->all(), 'id', 'fullname'), //กำหนด filter แบบ dropDownlist จากข้อมูล ใน field แบบ foreignKey
+                            'value' => function($model) {
+                                return Yii::$app->formatter->asDecimal($model->deposit);
                             }
                         ],
                         //'details:ntext',
                         [
                             'attribute' => 'type',
-                            'filter' => ArrayHelper::map(app\models\Rooms::find()->all(), 'id', 'type'), //กำหนด filter แบบ dropDownlist จากข้อมูล ใน field แบบ foreignKey
+                            'filter' => ['ห้องพัดลม' => 'ห้องพัดลม', 'ห้องแอร์' => 'ห้องแอร์'], //กำหนด filter แบบ dropDownlist จากข้อมูล ใน field แบบ foreignKey
                             'value' => function($model) {
                                 return $model->type;
                             }
@@ -97,11 +106,32 @@ Modal::end();
                                             'id' => 'showModalButton',
                                             'class' => 'btn btn-info fa fa-flash',
                                         ]) . " " .
-                                Html::button(' รายการบันทึกทั้งหมด', ['value' => Url::to(['energies/histories', 'room' => $data['id']]),
-                                    'title' => 'รายการบันทึกทั้งหมด : ' . $data['name'],
-                                    'id' => 'showModalButton',
-                                    'class' => 'btn btn-warning fa fa-database',
+                                        Html::button(' รายการบันทึกทั้งหมด', ['value' => Url::to(['energies/histories', 'room' => $data['id']]),
+                                            'title' => 'รายการบันทึกทั้งหมด : ' . $data['name'],
+                                            'id' => 'showModalButton',
+                                            'class' => 'btn btn-warning fa fa-database',
                                 ]);
+                            }
+                        ],
+                        [
+                            'attribute' => '',
+                            'label' => 'ย้ายเข้า/ออก',
+                            'format' => 'raw',
+                            'value' => function($data) {
+                                $status = \app\models\Leasing::checkRooms($data->id);
+                                if ($status == true) {
+                                    return Html::button(' ย้ายเข้า', ['value' => Url::to(['leasing/checkin', 'room' => $data->id]),
+                                                'title' => 'ย้ายเข้า : ' . $data['name'],
+                                                'id' => 'showModalButton',
+                                                'class' => 'btn btn-success fa fa-arrow-right',
+                                    ]);
+                                }else{
+                                    return Html::button(' ย้ายออก', ['value' => Url::to(['leasing/checkout', 'room' => $data->id]),
+                                                'title' => 'ย้ายออก : ' . $data['name'],
+                                                'id' => 'showModalButton',
+                                                'class' => 'btn btn-danger fa fa-arrow-left',
+                                    ]);
+                                }
                             }
                         ],
                         [

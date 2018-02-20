@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 
 /**
  * BuildingController implements the CRUD actions for Building model.
@@ -20,6 +21,18 @@ class BuildingController extends Controller {
      */
     public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index','create','update', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index','create','update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                         
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -86,16 +99,7 @@ class BuildingController extends Controller {
         ]);
     }
 
-    public function actionRooms($id) {
-
-        $dataProvider = \app\models\Rooms::find()->where(['building_id' => $id])->all();
-        //die(print_r($dataProvider));
-
-        return $this->render('rooms', [
-                    'dataProvider' => $dataProvider,
-                    'id' => $id,
-        ]);
-    }
+    
 
     /**
      * Updates an existing Building model.
