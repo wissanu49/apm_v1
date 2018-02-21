@@ -93,7 +93,6 @@ class LeasingController extends Controller {
         $model = new Leasing();
         $model->scenario = 'checkin';
         $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
-        
         $model->rooms_id = $room;
 
         if ($model->load(Yii::$app->request->post())) {
@@ -101,7 +100,7 @@ class LeasingController extends Controller {
             $model->leasing_date = date('Y-m-d H:i:s');
             $model->users_id = Yii::$app->user->identity->id;
             try {
-                 if ($model->save()) {
+                if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
                     $transection->commit();
                     return $this->redirect(['view', 'id' => $model->id]);
@@ -131,11 +130,24 @@ class LeasingController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+             try {
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                    $transection->commit();
+                   return $this->redirect(['index']);
+                } else {
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                    return $this->redirect(['index']);
+                }
+            } catch (Exception $ex) {
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                //return $this->redirect(['create']);
+            }
         }
 
-        return $this->render('update', [
+        return $this->renderAjax('update', [
                     'model' => $model,
         ]);
     }

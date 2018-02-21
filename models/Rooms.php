@@ -93,4 +93,10 @@ class Rooms extends \yii\db\ActiveRecord
     {
         return new RoomsQuery(get_called_class());
     }
+    
+    public function getRoomname($id) {
+        $get = Rooms::find()->select('name')->where(['id'=>$id])->one();
+        return $get->name;
+    }
+    
 }

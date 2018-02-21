@@ -23,10 +23,10 @@ class InvoiceController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'create'],
+                'only' => ['index', 'update', 'delete', 'deposit', 'invoice'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'create'],
+                        'actions' => ['index', 'update', 'delete', 'deposit', 'invoice'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -68,24 +68,48 @@ class InvoiceController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    
+     public function actionInvoice()
+    {
+        return $this->render('invoice');
+    }
 
     /**
      * Creates a new Invoice model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionDeposit($leasing)
     {
         $model = new Invoice();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        //$modelLeasing = \app\models\Leasing::find()->where(['id'=>$leasing])->all();
+        //$modelLeasing = $leas::findAll(['id'=>$leasing]);
+        //die(print_r($modelLeasing));
+        $model->leasing_id = $leasing;
+        
+        if ($model->load(Yii::$app->request->post())) {
+             try {
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                    $transection->commit();
+                    return $this->redirect(['viewdeposit', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                    return $this->redirect(['index']);
+                }
+            } catch (Exception $ex) {
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                //return $this->redirect(['create']);
+            }
         }
 
-        return $this->render('create', [
+        return $this->render('deposit', [
             'model' => $model,
         ]);
     }
+    
+   
 
     /**
      * Updates an existing Invoice model.

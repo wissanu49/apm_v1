@@ -5,12 +5,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Leasing */
 
-$this->title = 'Update Leasing: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Leasings', 'url' => ['index']];
+$this->title = 'เอกสารสัญญาเลขที่ : ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'สัญญาเช่า', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="leasing-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -18,4 +17,3 @@ $this->params['breadcrumbs'][] = 'Update';
         'model' => $model,
     ]) ?>
 
-</div>

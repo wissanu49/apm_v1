@@ -73,6 +73,10 @@ class Customers extends \yii\db\ActiveRecord
         return new CustomersQuery(get_called_class());
     }
     
+    public function getFullname($id) {
+        $get = Customers::find()->select('fullname')->where(['id'=>$id])->one();
+        return $get->fullname;
+    }
     public function validateIdCard()
     {
         $id = str_split(str_replace('-','', $this->citizen)); //ตัดรูปแบบและเอา ตัวอักษร ไปแยกเป็น array $id

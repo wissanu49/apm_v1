@@ -14,7 +14,10 @@ use yii\helpers\ArrayHelper;
 
 <?= $form->field($model, 'id')->textInput(['maxlength' => true, 'disabled' => true]) ?>
 
-<?= $form->field($model, 'rooms_id')->dropDownList(ArrayHelper::map(app\models\Rooms::find()->all(), 'id', 'name')) ?>
+<?= $form->field($model, 'rooms_id')->dropDownList(
+        ArrayHelper::map(app\models\Rooms::find()->all(),
+                'id', 'name'),
+        ['disabled'=> true]) ?>
 
 <?= $form->field($model, 'customers_id')->dropDownList(ArrayHelper::map(app\models\Customers::find()->select(['id', 'fullname'])->all(), 'id', 'fullname'),['prompt' => 'เลือกผู้เช่า']) ?>
 
@@ -63,7 +66,7 @@ $form->field($model, 'move_out')->widget(
 
 <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 
-<?= $form->field($model, 'deposit')->textInput(['value' => $model->rooms->deposit]) ?>
+<?= $form->field($model, 'deposit')->textInput(['value' => isset($model->rooms_id) ? $model->rooms->deposit : NULL]) ?>
 
 <div class="form-group">
     <?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success fa fa-save']) ?>

@@ -24,8 +24,8 @@
                         ['label' => 'HOME', 'options' => ['class' => 'header']],
                         ['label' => 'ข้อมูลลูกค้า', 'icon' => 'users', 'url' => ['/customers']],
                         ['label' => 'ตึก/อาคาร', 'icon' => 'building', 'url' => ['/building']],
-                        ['label' => 'ห้อง', 'icon' => 'bed', 'url' => ['/rooms']],                        
-                        //['label' => 'ทำสัญญาเช่า', 'url' => ['/leasing']],
+                        ['label' => 'ห้องพัก', 'icon' => 'bed', 'url' => ['/rooms']],                        
+                        ['label' => 'สัญญาเช่า', 'url' => ['/leasing']],
                         /*
                         [
                             'label' => 'บันทึกค่าไฟฟ้า/ปะปา',
