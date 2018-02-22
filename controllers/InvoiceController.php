@@ -82,7 +82,7 @@ class InvoiceController extends Controller
     public function actionDeposit($leasing)
     {
         $model = new Invoice();
-        //$modelLeasing = \app\models\Leasing::find()->where(['id'=>$leasing])->all();
+        $room = \app\models\Leasing::find()->select('rooms_id')->where(['id'=>$leasing])->one();
         //$modelLeasing = $leas::findAll(['id'=>$leasing]);
         //die(print_r($modelLeasing));
         $model->leasing_id = $leasing;
@@ -106,6 +106,7 @@ class InvoiceController extends Controller
 
         return $this->render('deposit', [
             'model' => $model,
+            'room' => $room,
         ]);
     }
     

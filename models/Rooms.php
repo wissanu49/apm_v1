@@ -98,5 +98,9 @@ class Rooms extends \yii\db\ActiveRecord
         $get = Rooms::find()->select('name')->where(['id'=>$id])->one();
         return $get->name;
     }
+     public function getPrice($id) {
+        $get = Rooms::find()->select('monthly_price')->where(['id'=>$id])->one();
+        return $get->monthly_price;
+    }
     
 }

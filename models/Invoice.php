@@ -44,6 +44,8 @@ class Invoice extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    
+    
     public static function tableName()
     {
         return 'invoice';
@@ -76,7 +78,7 @@ class Invoice extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'leasing_id' => 'Leasing ID',
-            'room_price' => 'Room Price',
+            'room_price' => 'ค่าห้อง',
             'electric_unit' => 'หน่วยไฟฟ้า',
             'electric_price' => 'ค่าไฟฟ้า',
             'water_unit' => 'หน่วยน้ำปะปา',
@@ -136,4 +138,6 @@ class Invoice extends \yii\db\ActiveRecord
     {
         return new InvoiceQuery(get_called_class());
     }
+    
+    
 }
