@@ -77,7 +77,7 @@ class Invoice extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'leasing_id' => 'Leasing ID',
+            'leasing_id' => 'เลขสัญญา',
             'room_price' => 'ค่าห้อง',
             'electric_unit' => 'หน่วยไฟฟ้า',
             'electric_price' => 'ค่าไฟฟ้า',
@@ -94,9 +94,9 @@ class Invoice extends \yii\db\ActiveRecord
             'additional_5' => 'ค่าใช้จ่ายเพิ่มเติม',
             'additional_5_price' => 'บาท',
             'refun_1' => 'คืนเงิน',
-            'refun_1_price' => 'Refun 1 Price',
+            'refun_1_price' => 'คืนเงิน',
             'refun_2' => 'คืนเงิน',
-            'refun_2_price' => 'Refun 2 Price',
+            'refun_2_price' => 'คืนเงิน',
             'total' => 'รวม',
             'comment' => 'หมายเหตุ',
             'appointment' => 'วันกำหนดชำระ',
@@ -104,6 +104,12 @@ class Invoice extends \yii\db\ActiveRecord
             'users_id' => 'Users ID',
             'invoice_date' => 'วันที่ออกใบแจ้งหนี้',
         ];
+    }
+    
+     public function scenarios() {
+        $sn = parent::scenarios();
+        $sn['deposit'] = ['id','room_price', 'additional_1', 'total', 'appointment'];
+        return $sn;
     }
 
     /**

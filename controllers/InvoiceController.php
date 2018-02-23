@@ -18,6 +18,11 @@ class InvoiceController extends Controller
     /**
      * {@inheritdoc}
      */
+    public $KEY_RUN = 'IN';
+    public $FIELD_NAME = 'id';
+    public $TABLE_NAME = 'invoice';
+    public $Month, $Year, $CODE, $LastID, $Key, $last_id = "";  // เก็บค่าเดือน เช่น 04  date("m")
+    public $last_3_digit, $new_3_digit;
     public function behaviors()
     {
         return [
@@ -82,13 +87,22 @@ class InvoiceController extends Controller
     public function actionDeposit($leasing)
     {
         $model = new Invoice();
+        $model->scenario = 'deposit';
+        
         $room = \app\models\Leasing::find()->select('rooms_id')->where(['id'=>$leasing])->one();
-        //$modelLeasing = $leas::findAll(['id'=>$leasing]);
-        //die(print_r($modelLeasing));
+        $room_price = \app\models\Rooms::getPrice($room);
+        $deposit = \app\models\Rooms::getDeposit($room);
+        $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
         $model->leasing_id = $leasing;
+        $model->room_price = $room_price;
+        $model->additional_1_price = $deposit;
         
         if ($model->load(Yii::$app->request->post())) {
              try {
+                $transection = \Yii::$app->db->beginTransaction();
+                $model->users_id = \Yii::$app->user->identity->id;
+                $model->invoice_date = date('Y-m-d');
+                $model->status = 'waiting';
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
                     $transection->commit();
@@ -160,5 +174,41 @@ class InvoiceController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    public function RunningCodes($field, $table, $key) {
+
+        $this->Month = date("m");
+        $this->Year = substr((date("Y")), 2);
+
+        $this->CODE = $key . $this->Year . $this->Month;
+        $run = $this->findCode($field, $table, $this->CODE);
+
+        if (isset($run['id'])) {
+
+            $this->last_id = $run['id'];
+            //echo $last_id."<br>";
+            $this->last_3_digit = substr($this->last_id, -3, 3); // ตัดเอาเฉพาะ 4 หลักสุดท้าย
+            //echo $last_4_digit."<br>";
+
+            $this->last_3_digit = $this->last_3_digit + 1;
+            //echo $last_4_digit."<br>";
+            while (strlen($this->last_3_digit) < 3) {
+                $this->last_3_digit = "0" . $this->last_3_digit;
+            }
+            $this->CODE = $this->CODE . $this->last_3_digit;
+            return $this->CODE;
+            //$ObjQry=mysql_query("INSERT INTO create_id(row,id) VALUES('','$CODE')");
+        } else {
+            $this->CODE = $this->CODE . "001";
+            return $this->CODE;
+        }
+    }
+
+    public function findCode($field, $table, $code) {
+        $sql = "SELECT MAX($field) as id FROM $table WHERE $field LIKE '$code%'";
+
+        //$command = Yii::$app()->createCommand($sql);
+        $row = Yii::$app->db->createCommand($sql)->queryOne();
+        return $row;
     }
 }

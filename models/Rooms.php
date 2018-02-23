@@ -103,4 +103,9 @@ class Rooms extends \yii\db\ActiveRecord
         return $get->monthly_price;
     }
     
+    public function getDeposit($id) {
+        $get = Rooms::find()->select('deposit')->where(['id'=>$id])->one();
+        return $get->deposit;
+    }
+    
 }

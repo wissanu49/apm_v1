@@ -14,12 +14,12 @@ use yii\helpers\ArrayHelper;
 
 <?= $form->field($model, 'id')->textInput(['maxlength' => true, 'disabled' => true]) ?>
 
-<?= $form->field($model, 'rooms_id')->dropDownList(
-        ArrayHelper::map(app\models\Rooms::find()->all(),
-                'id', 'name'),
-        ['disabled'=> true]) ?>
+<?=
+$form->field($model, 'rooms_id')->dropDownList(
+        ArrayHelper::map(app\models\Rooms::find()->all(), 'id', 'name'), ['disabled' => true])
+?>
 
-<?= $form->field($model, 'customers_id')->dropDownList(ArrayHelper::map(app\models\Customers::find()->select(['id', 'fullname'])->all(), 'id', 'fullname'),['prompt' => 'เลือกผู้เช่า']) ?>
+<?= $form->field($model, 'customers_id')->dropDownList(ArrayHelper::map(app\models\Customers::find()->select(['id', 'fullname'])->all(), 'id', 'fullname'), ['prompt' => 'เลือกผู้เช่า']) ?>
 
 <?=
 $form->field($model, 'move_in')->widget(
@@ -31,6 +31,7 @@ $form->field($model, 'move_in')->widget(
     'template' => '{input}{addon}',
     'options' => ['placeholder' => 'วันที่ย้ายออก'],
     'value' => date('Y-m-d'),
+    'language' => 'th',
     'clientOptions' => [
         'autoclose' => true,
         'format' => 'yyyy-mm-dd',
@@ -49,6 +50,7 @@ $form->field($model, 'move_out')->widget(
     'template' => '{input}{addon}',
     'options' => ['placeholder' => 'วันที่ย้ายออก'],
     'value' => NULL,
+    'language' => 'th',
     'clientOptions' => [
         'autoclose' => true,
         'format' => 'yyyy-mm-dd',

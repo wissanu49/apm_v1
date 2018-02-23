@@ -57,8 +57,8 @@ class Leasing extends \yii\db\ActiveRecord {
      */
     public function attributeLabels() {
         return [
-            'id' => 'เลขเอกสาร',
-            'leasing_code' => 'เลขที่สัญญา',
+            'id' => 'เลขสัญญา',
+            'leasing_code' => 'เลขสัญญาอ้างอิง',
             'move_in' => 'วันที่ย้ายเข้า',
             'move_out' => 'วันที่ย้ายออก',
             'users_id' => 'ผู้บันทึก',
