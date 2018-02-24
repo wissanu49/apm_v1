@@ -102,7 +102,7 @@ class InvoiceController extends Controller
                 $transection = \Yii::$app->db->beginTransaction();
                 $model->users_id = \Yii::$app->user->identity->id;
                 $model->invoice_date = date('Y-m-d');
-                $model->status = 'waiting';
+                $model->status = 'รอการชำระ';
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
                     $transection->commit();

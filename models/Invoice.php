@@ -145,5 +145,13 @@ class Invoice extends \yii\db\ActiveRecord
         return new InvoiceQuery(get_called_class());
     }
     
+    public function checkInvoice($id) {
+        $get = Invoice::find()->select('leasing_id')->where(['leasing_id'=>$id])->one();
+        if(isset($get->leasing_id)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
 }

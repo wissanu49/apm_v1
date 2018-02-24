@@ -33,11 +33,23 @@ $this->title = 'ออกใบแจ้งหนี้';
                 <!-- Table row -->
                 <?= $form->field($model, 'leasing_id')->hiddenInput()->label(false) ?>
 
+                
                 <div class="row">
                     <div class="col-xs-8 table-responsive">
                         <div style="text-align: center;">
                             <h3>ใบแจ้งหนี้</h3>
                             <h3>เลขที่ : <?= $model->id ?></h3>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                room
+                            </div>
+                            <div class="col-xs-4">
+                                
+                            </div>
+                            <div class="col-xs-4">
+                                casd
+                            </div>
                         </div>
                         <table class="table table-striped">
                             <tr>

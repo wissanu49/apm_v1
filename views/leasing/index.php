@@ -38,7 +38,7 @@ Modal::end();
                     'filterModel' => $searchModel,
                     'columns' => [
                         ['class' => 'yii\grid\SerialColumn'],
-                        //'id',
+                        'id',
                         'leasing_code',
                         'move_in',
                         'move_out',
@@ -63,20 +63,19 @@ Modal::end();
                             'label' => 'สถานะ',
                             'format' => 'raw',
                             'value' => function ($data) {
-                                if($data->status == "IN"){
+                                if ($data->status == "IN") {
                                     return Html::button(' เข้าอยู่ ', [
-                                            'value' => NULL,
-                                            'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
-                                            'class' => 'btn btn-success fa fa-lock'
-                                ]);
-                                }else if($data->status == "OUT"){
+                                                'value' => NULL,
+                                                'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
+                                                'class' => 'btn btn-success fa fa-lock'
+                                    ]);
+                                } else if ($data->status == "OUT") {
                                     return Html::button(' ย้ายออก ', [
-                                            'value' => NULL,
-                                            'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
-                                            'class' => 'btn btn-success fa fa-unlock'
-                                ]);
+                                                'value' => NULL,
+                                                'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
+                                                'class' => 'btn btn-success fa fa-unlock'
+                                    ]);
                                 }
-                                
                             }
                         ],
                         [
@@ -84,10 +83,13 @@ Modal::end();
                             'label' => 'ใบแจ้งหนี้',
                             'format' => 'raw',
                             'value' => function ($data) {
-                                return Html::a('ออกใบแจ้งหนี้ประกันห้อง', 
-                                            ['invoice/deposit', 'leasing' => $data->id],
-                                            ['class' => 'btn btn-info fa fa-edit']
-                                );
+
+                                //$status = \app\models\Invoice::checkInvoice($data->id);
+                                if (($status = \app\models\Invoice::checkInvoice($data->id)) == false) {
+                                    return Html::a('ออกใบแจ้งหนี้ประกันห้อง', ['invoice/deposit', 'leasing' => $data->id], ['class' => 'btn btn-info fa fa-edit']);
+                                }else{
+                                    return '';
+                                }
                             }
                         ],
                         [
