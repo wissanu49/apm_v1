@@ -108,4 +108,9 @@ class Rooms extends \yii\db\ActiveRecord
         return $get->deposit;
     }
     
+    public function showName($id) {
+        $get = Rooms::find()->select('name')->where(['id'=>$id])->one();
+        echo $get->name;
+    }
+    
 }

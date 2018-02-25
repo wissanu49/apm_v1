@@ -41,7 +41,7 @@ class SearchLeasing extends Leasing
      */
     public function search($params)
     {
-        $query = Leasing::find();
+        $query = Leasing::find()->orderBy('id DESC');
 
         // add conditions that should always apply here
 

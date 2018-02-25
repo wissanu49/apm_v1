@@ -21,6 +21,8 @@ $dataOption = [
 ];
 
 $this->title = 'ออกใบแจ้งหนี้';
+
+$dateCreate = date('Y-m-d H:i:s');
 ?>
 <div class="row">
     <div class="col-xs-12">
@@ -31,25 +33,42 @@ $this->title = 'ออกใบแจ้งหนี้';
             <div class="box-body">
                 <?php $form = ActiveForm::begin(); ?>
                 <!-- Table row -->
+                <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
                 <?= $form->field($model, 'leasing_id')->hiddenInput()->label(false) ?>
+                 <?= $form->field($model, 'electric_unit')->hiddenInput(['value'=>0])->label(false) ?>
+                 <?= $form->field($model, 'electric_price')->hiddenInput(['value'=>0])->label(false) ?>
+                 <?= $form->field($model, 'water_unit')->hiddenInput(['value'=>0])->label(false) ?>
+                 <?= $form->field($model, 'water_price')->hiddenInput(['value'=>0])->label(false) ?>
+                <?php
+                foreach ($customer as $cus) {
+                    $cus_name = $cus['fullname'];
+                    $cus_addr = $cus['address'];
+                }
+                ?>
 
-                
                 <div class="row">
                     <div class="col-xs-8 table-responsive">
-                        <div style="text-align: center;">
-                            <h3>ใบแจ้งหนี้</h3>
-                            <h3>เลขที่ : <?= $model->id ?></h3>
+                        <div class="row">
+
+                            <div class="col-lg-6" style="text-align: left;">
+                                <h4>LYMRR</h4>
+                            </div>
+                            <div class="col-lg-6" style="text-align: right;">
+                                <h4>ใบแจ้งหนี้</h4>
+                                <b>เลขที่ : </b><?= $model->id ?>
+                            </div>
+                            
+
                         </div>
                         <div class="row">
-                            <div class="col-xs-4">
-                                room
+                            <div class="col-xs-6">
+                                <b>ห้อง : </b><?= \app\models\Rooms::showName($room); ?>
+                                <b>สัญญาเช่า : </b><?= $model->leasing_id; ?>
+                                <br>
+                                <b>ลูกค้า : </b><?= $cus_name; ?><br>
+                                <b>ที่อยู่ : </b><?= $cus_addr; ?>
                             </div>
-                            <div class="col-xs-4">
-                                
-                            </div>
-                            <div class="col-xs-4">
-                                casd
-                            </div>
+
                         </div>
                         <table class="table table-striped">
                             <tr>
@@ -62,43 +81,48 @@ $this->title = 'ออกใบแจ้งหนี้';
                                     <td>1</td>
                                     <td>ค่าห้องพัก</td>
                                     <td>
-                                        <?= $form->field($model, 'room_price')->textInput(['readonly'=>'readonly'])->label(false) ?>
+                                        <?= $form->field($model, 'rental')->textInput(['readonly' => 'readonly'])->label(false) ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
-                                    <td><?= $form->field($model, 'additional_1')->textInput(['value' => 'ค่าประกันห้อง'])->label(false) ?></td>
-                                    <td><?=
-                                        $form->field($model, 'additional_1_price')->textInput(['readonly'=>'readonly'])->label(false)
-                                        ?></td>
+                                    <td>ค่าประกันห้อง</td>
+                                    <td>
+                                        <?= $form->field($model, 'deposit')->textInput(['readonly' => 'readonly'])->label(false) ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
-                                    <td><?= $form->field($model, 'additional_2')->dropDownList($dataOption, ['prompt' => ''])->label(false) ?></td>
-                                    <td><?= $form->field($model, 'additional_2_price')->textInput(['placeholder' => ''])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_1')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_1_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>4</td>
-                                    <td><?= $form->field($model, 'additional_3')->dropDownList($dataOption, ['prompt' => ''])->label(false) ?></td>
-                                    <td><?= $form->field($model, 'additional_3_price')->textInput(['placeholder' => ''])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_2')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_2_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>5</td>
-                                    <td><?= $form->field($model, 'additional_4')->dropDownList($dataOption, ['prompt' => ''])->label(false) ?></td>
-                                    <td><?= $form->field($model, 'additional_4_price')->textInput(['placeholder' => ''])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_3')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_3_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>6</td>
-                                    <td><?= $form->field($model, 'additional_5')->dropDownList($dataOption, ['prompt' => ''])->label(false) ?></td>
-                                    <td><?= $form->field($model, 'additional_5_price')->textInput(['placeholder' => ''])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_4')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_4_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>7</td>
-                                    <td>รวม</td>
+                                    <td><?= $form->field($model, 'additional_5')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_5_price')->textInput()->label(false) ?></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align: right; font-size: 16px;"><b>ราคารวม</b></td>
                                     <?php
-                                    $total = $model->room_price + $model->additional_1_price;
+                                    $total = $model->rental + $model->deposit;
                                     ?>
-                                    <td><?= $form->field($model, 'total')->textInput(['value' => $total, 'readonly'=>'readonly'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'total')->textInput(['value' => $total, 'readonly' => 'readonly'])->label(false) ?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -121,11 +145,11 @@ $this->title = 'ออกใบแจ้งหนี้';
                             <?= $form->field($model, 'comment')->textarea(['rows' => 5]) ?>
                         </div>
 
-                        <?php // $form->field($model, 'status')->dropDownList(['waiting' => 'Waiting', 'payment' => 'Payment',], ['prompt' => ''])  ?>
+                        <?=$form->field($model, 'status')->hiddenInput(['value' => 'รอการชำระ'])->label(false) ?>
 
-                        <?= $form->field($model, 'users_id')->hiddenInput()->label(false) ?>
+                        <?= $form->field($model, 'users_id')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false) ?>
 
-                        <?= $form->field($model, 'invoice_date')->hiddenInput()->label(false) ?>
+                        <?= $form->field($model, 'invoice_date')->hiddenInput(['value'=> $dateCreate])->label(false) ?>
 
                         <div class="form-group">
                             <?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success fa fa-save']) ?>
@@ -170,6 +194,7 @@ $this->title = 'ออกใบแจ้งหนี้';
         function TotalCal(){
             var amount = 0;
             var room = 0;
+            var deposit;
             var a1 = 0;
             var a2 = 0;
             var a3 = 0;
@@ -178,7 +203,8 @@ $this->title = 'ออกใบแจ้งหนี้';
             var total = 0;
             
             amount = parseInt($('#" . Html::getInputId($model, 'total') . "').val());
-            room = parseInt($('#" . Html::getInputId($model, 'room_price') . "').val());
+            room = parseInt($('#" . Html::getInputId($model, 'rental') . "').val());
+            deposit = parseInt($('#" . Html::getInputId($model, 'deposit') . "').val());
             a1 = parseInt($('#" . Html::getInputId($model, 'additional_1_price') . "').val());
             a2 = parseInt($('#" . Html::getInputId($model, 'additional_2_price') . "').val());
             a3 = parseInt($('#" . Html::getInputId($model, 'additional_3_price') . "').val());
@@ -201,7 +227,7 @@ $this->title = 'ออกใบแจ้งหนี้';
                 total += a5;
             }
             
-            total += room;          
+            total += (room + deposit);          
             $('#" . Html::getInputId($model, 'total') . "').val(total);  
         }
         

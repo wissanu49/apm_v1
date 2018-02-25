@@ -39,30 +39,28 @@ use Yii;
  * @property Leasing $leasing
  * @property Receipt[] $receipts
  */
-class Invoice extends \yii\db\ActiveRecord
-{
+class Invoice extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    
-    
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'invoice';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['id', 'leasing_id', 'room_price', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
-            [['room_price', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
+            [['id', 'leasing_id', 'rental', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
+            [['rental', 'deposit', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
+            
             [['appointment', 'invoice_date'], 'safe'],
             [['status'], 'string'],
             [['id', 'leasing_id'], 'string', 'max' => 25],
             [['additional_1', 'additional_2', 'additional_3', 'additional_4', 'additional_5', 'refun_1', 'refun_2'], 'string', 'max' => 100],
+            
             [['comment'], 'string', 'max' => 255],
             [['id'], 'unique'],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
@@ -73,12 +71,12 @@ class Invoice extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'leasing_id' => 'เลขสัญญา',
-            'room_price' => 'ค่าห้อง',
+            'rental' => 'ค่าห้อง',
+            'deposit' => 'ค่าประกันห้อง',
             'electric_unit' => 'หน่วยไฟฟ้า',
             'electric_price' => 'ค่าไฟฟ้า',
             'water_unit' => 'หน่วยน้ำปะปา',
@@ -105,34 +103,32 @@ class Invoice extends \yii\db\ActiveRecord
             'invoice_date' => 'วันที่ออกใบแจ้งหนี้',
         ];
     }
-    
-     public function scenarios() {
+
+    public function scenarios() {
         $sn = parent::scenarios();
-        $sn['deposit'] = ['id','room_price', 'additional_1', 'total', 'appointment'];
+        $sn['deposit'] = ['id', 'rental', 'deposit', 'total', 'appointment'];
+        $sn['create'] = ['id', 'leasing_id', 'rental', 'deposit', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'total', 'appointment', 'users_id', 'invoice_date'];
         return $sn;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
-    {
+    public function getUsers() {
         return $this->hasOne(Users::className(), ['id' => 'users_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLeasing()
-    {
+    public function getLeasing() {
         return $this->hasOne(Leasing::className(), ['id' => 'leasing_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getReceipts()
-    {
+    public function getReceipts() {
         return $this->hasMany(Receipt::className(), ['invoice_id' => 'id']);
     }
 
@@ -140,18 +136,17 @@ class Invoice extends \yii\db\ActiveRecord
      * {@inheritdoc}
      * @return InvoiceQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new InvoiceQuery(get_called_class());
     }
-    
+
     public function checkInvoice($id) {
-        $get = Invoice::find()->select('leasing_id')->where(['leasing_id'=>$id])->one();
-        if(isset($get->leasing_id)){
+        $get = Invoice::find()->select('leasing_id')->where(['leasing_id' => $id])->one();
+        if (isset($get->leasing_id)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
+
 }

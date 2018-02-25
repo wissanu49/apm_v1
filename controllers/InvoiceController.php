@@ -9,12 +9,13 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\db\Query;
 
 /**
  * InvoiceController implements the CRUD actions for Invoice model.
  */
-class InvoiceController extends Controller
-{
+class InvoiceController extends Controller {
+
     /**
      * {@inheritdoc}
      */
@@ -23,8 +24,8 @@ class InvoiceController extends Controller
     public $TABLE_NAME = 'invoice';
     public $Month, $Year, $CODE, $LastID, $Key, $last_id = "";  // เก็บค่าเดือน เช่น 04  date("m")
     public $last_3_digit, $new_3_digit;
-    public function behaviors()
-    {
+
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -50,14 +51,13 @@ class InvoiceController extends Controller
      * Lists all Invoice models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $searchModel = new SearchInvoice();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -67,15 +67,38 @@ class InvoiceController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+    public function actionView($id) {
+
+        $model = $this->findModel($id);
+
+        $query = new Query;
+        $query->select([
+                    'invoice.*',
+                    'leasing.id as leasing',
+                    'rooms.name as room',
+                    'customers.id as customer_id', 'customers.fullname', 'customers.address', 'customers.phone',
+                ])
+                ->from('invoice')
+                ->where(['invoice.id' => $id])
+                ->join('LEFT OUTER JOIN', 'leasing', 'leasing.id = invoice.leasing_id')
+                ->join('INNER JOIN', 'rooms', 'rooms.id = leasing.rooms_id')
+                ->join('INNER JOIN', 'customers', 'customers.id = leasing.customers_id');
+
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        //die(print_r($data));
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('viewInvoice', [
+                        'dataProvider' => $data,
+            ]);
+        } else {
+            return $this->render('viewInvoice', [
+                        'dataProvider' => $data,
+            ]);
+        }
     }
-    
-     public function actionInvoice()
-    {
+
+    public function actionInvoice() {
         return $this->render('invoice');
     }
 
@@ -84,47 +107,49 @@ class InvoiceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionDeposit($leasing)
-    {
+    public function actionDeposit($leasing) {
         $model = new Invoice();
-        $model->scenario = 'deposit';
-        
-        $room = \app\models\Leasing::find()->select('rooms_id')->where(['id'=>$leasing])->one();
-        $room_price = \app\models\Rooms::getPrice($room);
+        //$model->scenario = 'deposit';
+
+        $room = \app\models\Leasing::find()->select('rooms_id')->where(['id' => $leasing])->one();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing])->one();
+
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
+        $rental = \app\models\Rooms::getPrice($room);
         $deposit = \app\models\Rooms::getDeposit($room);
         $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
         $model->leasing_id = $leasing;
-        $model->room_price = $room_price;
-        $model->additional_1_price = $deposit;
-        
+        $model->rental = $rental;
+        $model->deposit = $deposit;
+
         if ($model->load(Yii::$app->request->post())) {
-             try {
+
+            //die(print_r($_POST));
+
+            try {
                 $transection = \Yii::$app->db->beginTransaction();
-                $model->users_id = \Yii::$app->user->identity->id;
-                $model->invoice_date = date('Y-m-d');
-                $model->status = 'รอการชำระ';
+                //die(print_r($model));
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
                     $transection->commit();
-                    return $this->redirect(['viewdeposit', 'id' => $model->id]);
+                    return $this->redirect(['view', 'id' => $model->id]);
                 } else {
                     Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
                     $transection->rollBack();
-                    return $this->redirect(['index']);
+                    //return $this->redirect(['index']);
                 }
             } catch (Exception $ex) {
-                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.');
                 //return $this->redirect(['create']);
             }
         }
 
         return $this->render('deposit', [
-            'model' => $model,
-            'room' => $room,
+                    'model' => $model,
+                    'room' => $room,
+                    'customer' => $dataCustomer,
         ]);
     }
-    
-   
 
     /**
      * Updates an existing Invoice model.
@@ -133,8 +158,7 @@ class InvoiceController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -142,7 +166,7 @@ class InvoiceController extends Controller
         }
 
         return $this->render('update', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -153,8 +177,7 @@ class InvoiceController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -167,14 +190,14 @@ class InvoiceController extends Controller
      * @return Invoice the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Invoice::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
     public function RunningCodes($field, $table, $key) {
 
         $this->Month = date("m");
@@ -211,4 +234,5 @@ class InvoiceController extends Controller
         $row = Yii::$app->db->createCommand($sql)->queryOne();
         return $row;
     }
+
 }

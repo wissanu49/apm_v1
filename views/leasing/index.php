@@ -39,9 +39,9 @@ Modal::end();
                     'columns' => [
                         ['class' => 'yii\grid\SerialColumn'],
                         'id',
-                        'leasing_code',
+                        //'leasing_code',
                         'move_in',
-                        'move_out',
+                        //'move_out',
                         //'users_id',
                         [
                             'attribute' => 'rooms_id',
@@ -57,7 +57,7 @@ Modal::end();
                         ],
                         'leasing_date',
                         'status',
-                        'comment:ntext',
+                        //'comment:ntext',
                         [
                             'attribute' => 'status',
                             'label' => 'สถานะ',
@@ -80,7 +80,7 @@ Modal::end();
                         ],
                         [
                             'attribute' => '',
-                            'label' => 'ใบแจ้งหนี้',
+                            'label' => '',
                             'format' => 'raw',
                             'value' => function ($data) {
 

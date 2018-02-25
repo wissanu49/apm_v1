@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\Models\SearchInvoice */
@@ -11,6 +12,15 @@ use yii\helpers\Url;
 
 $this->title = 'ใบแจ้งหนี้';
 $this->params['breadcrumbs'][] = $this->title;
+?>
+<?php
+Modal::begin([
+    'headerOptions' => ['id' => 'modalHeader'],
+    'id' => 'modal',
+    'size' => 'modal-lg',
+]);
+echo "<div id='modalContent'></div>";
+Modal::end();
 ?>
 <div class="row">
     <div class="col-xs-12">
@@ -49,7 +59,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'refun_1_price',
                         //'refun_2',
                         //'refun_2_price',
-                        'total',
+                         [
+                          'attribute' => 'total',
+                            //'filter' => true,
+                            'value' => function ($data){
+                                return Yii::$app->formatter->asDecimal($data->total);
+                            }
+                        ],
                         //'comment',
                         'appointment',
                         //'status',
@@ -74,18 +90,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'visibleButtons' => [
-                                'view' => function ($model, $key, $index) {
+                                'update' => function ($model, $key, $index) {
                                     return false;
                                 },
                                 'delete' => function ($model, $key, $index) {
                                     return false;
                                 },
                             ],
-                            'template' => '{update}',
+                            'template' => '{view}',
                             'buttons' => [
-                                'update' => function ($url, $model) {
-                                    return Html::button('', ['value' => Url::to(['leasing/update', 'id' => $model->id]),
-                                                'title' => 'ข้อมูลสัญญาเช่า',
+                                'view' => function ($url, $model) {
+                                    return Html::button('', ['value' => Url::to(['invoice/view', 'id' => $model->id]),
+                                                'title' => 'ข้อมูลใบแจ้งหนี้',
+                                                'id' => 'showModalButton',
                                                 'class' => 'btn btn-primary fa fa-edit'
                                     ]);
                                 },

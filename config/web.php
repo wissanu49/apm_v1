@@ -8,6 +8,7 @@ $baseUrl = str_replace('/web', '', (new Request)->getBaseUrl());
 
 $config = [
     'id' => 'apm',
+    'timeZone' => 'Asia/Bangkok',
     'basePath' => dirname(__DIR__),
     'name' => 'โปรแกรมหอพัก',
     'bootstrap' => ['log'],

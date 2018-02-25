@@ -19,7 +19,7 @@ class SearchInvoice extends Invoice
     {
         return [
             [['id', 'leasing_id', 'additional_1', 'additional_2', 'additional_3', 'additional_4', 'additional_5', 'refun_1', 'refun_2', 'comment', 'appointment', 'status', 'invoice_date'], 'safe'],
-            [['room_price', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
+            [['rental', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
         ];
     }
 
@@ -41,7 +41,7 @@ class SearchInvoice extends Invoice
      */
     public function search($params)
     {
-        $query = Invoice::find();
+        $query = Invoice::find()->orderBy('id DESC');
 
         // add conditions that should always apply here
 
@@ -59,7 +59,7 @@ class SearchInvoice extends Invoice
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'room_price' => $this->room_price,
+            'rental' => $this->rental,
             'electric_unit' => $this->electric_unit,
             'electric_price' => $this->electric_price,
             'water_unit' => $this->water_unit,
