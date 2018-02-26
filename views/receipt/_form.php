@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'leasing_id')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'room_price')->textInput() ?>
+    <?= $form->field($model, 'rental')->textInput() ?>
 
     <?= $form->field($model, 'electric_price')->textInput() ?>
 

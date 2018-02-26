@@ -54,7 +54,7 @@ class Invoice extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['id', 'leasing_id', 'rental', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
-            [['rental', 'deposit', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
+            [['rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from','water_unit_to', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
             
             [['appointment', 'invoice_date'], 'safe'],
             [['status'], 'string'],
@@ -77,9 +77,11 @@ class Invoice extends \yii\db\ActiveRecord {
             'leasing_id' => 'เลขสัญญา',
             'rental' => 'ค่าห้อง',
             'deposit' => 'ค่าประกันห้อง',
-            'electric_unit' => 'หน่วยไฟฟ้า',
+            'electric_unit_from' => 'หน่วยไฟฟ้าครั้งก่อน',
+            'electric_unit_to' => 'หน่วยไฟฟ้าล่าสุด',
             'electric_price' => 'ค่าไฟฟ้า',
-            'water_unit' => 'หน่วยน้ำปะปา',
+            'water_unit_from' => 'หน่วยน้ำปะปาครั้งก่อน',
+            'water_unit_to' => 'หน่วยน้ำปะปาล่าสุด',
             'water_price' => 'ค่าน้ำ',
             'additional_1' => 'ค่าใช้จ่ายเพิ่มเติม',
             'additional_1_price' => 'บาท',
@@ -107,7 +109,7 @@ class Invoice extends \yii\db\ActiveRecord {
     public function scenarios() {
         $sn = parent::scenarios();
         $sn['deposit'] = ['id', 'rental', 'deposit', 'total', 'appointment'];
-        $sn['create'] = ['id', 'leasing_id', 'rental', 'deposit', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'total', 'appointment', 'users_id', 'invoice_date'];
+        $sn['create'] = ['id', 'leasing_id', 'rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from', 'water_unit_to','water_price', 'total', 'appointment', 'users_id', 'invoice_date'];
         return $sn;
     }
 

@@ -1,8 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Invoice */
@@ -22,8 +20,15 @@ $dataOption = [
 
 foreach ($dataProvider as $data) {
     $inv_id = $data['id'];
+    $leasing_id = $data['leasing_id'];
     $rental = $data['rental'];
     $deposit = $data['deposit'];
+    $electric_unit_from = $data['electric_unit_from'];
+    $electric_unit_to = $data['electric_unit_to'];
+    $water_unit_from = $data['water_unit_from'];
+    $water_unit_to = $data['water_unit_to'];
+    $water_price = $data['water_price'];
+    $electric_price = $data['electric_price'];
     $a1 = $data['additional_1'];
     $ad1 = $data['additional_1_price'];
     $a2 = $data['additional_2'];
@@ -34,11 +39,16 @@ foreach ($dataProvider as $data) {
     $ad4 = $data['additional_4_price'];
     $a5 = $data['additional_5'];
     $ad5 = $data['additional_5_price'];
+    $r1 = $data['refun_1'];
+    $re1 = $data['refun_1_price'];
+    $r2 = $data['refun_2'];
+    $re2 = $data['refun_2_price'];
     $total = $data['total'];
     $room = $data['room'];
     $cus_name = $data['fullname'];
     $cus_addr = $data['address'];
     $appointment = $data['appointment'];
+    $comment = $data['comment'];
 }
 
 $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
@@ -74,93 +84,124 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                             </div>
                             <div class="col-xs-6" style="text-align: right;">
                                 <br><br>
-                                <b>กำหนดชำระวันที่ : </b><?= $appointment ?>
+                                <b>กำหนดชำระ : </b><?= $appointment ?>
                             </div>
                         </div>
                         <br>
                         <table class="table table-striped">
                             <tr>
                                 <th style="width: 70%;">รายการ</th>
-                                <th style="width: 30%;">จำนวนเงิน</th>
+                                <th style="width: 30%; text-align: right;">จำนวนเงิน</th>
                             </tr>
                             <tbody>
-<?php
-if ($rental != NULL) {
-    ?>
+                                <?php
+                                if ($rental != NULL) {
+                                    ?>
                                     <tr>
                                         <td>ค่าห้องพัก</td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($rental) ?>
+                                            <?= Yii::$app->formatter->asDecimal($rental) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
+                                    <?php
+                                if ($water_price > 0) {
+                                    ?>
+                                    <tr>
+                                        <td>ค่าน้ำ ( <?= $water_unit_from." - ".$water_unit_to ?>)</td>
+                                        <td style="text-align: right;">
+                                            <?= Yii::$app->formatter->asDecimal($water_price) ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                                    <?php
+                                if ($electric_price > 0) {
+                                    ?>
+                                    <tr>
+                                        <td>ค่าไฟฟ้า ( <?= $electric_unit_from." - ".$electric_unit_to ?>)</td>
+                                        <td style="text-align: right;">
+                                            <?= Yii::$app->formatter->asDecimal($electric_price) ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
                                 <?php
                                 if ($deposit != NULL) {
                                     ?>
                                     <tr>
                                         <td>ค่าประกันห้อง</td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($deposit) ?>
+                                            <?= Yii::$app->formatter->asDecimal($deposit) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                                 <?php
                                 if ($ad1 > 0) {
                                     ?>
                                     <tr>
                                         <td><?= $a1 ?></td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($ad1) ?>
+                                            <?= Yii::$app->formatter->asDecimal($ad1) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                                 <?php
                                 if ($ad2 > 0) {
                                     ?>
                                     <tr>
                                         <td><?= $a2 ?></td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($ad2) ?>
+                                            <?= Yii::$app->formatter->asDecimal($ad2) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                                 <?php
                                 if ($ad3 > 0) {
                                     ?>
                                     <tr>
                                         <td><?= $a3 ?></td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($ad3) ?>
+                                            <?= Yii::$app->formatter->asDecimal($ad3) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                                 <?php
                                 if ($ad4 > 0) {
                                     ?>
                                     <tr>
                                         <td><?= $a4 ?></td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($ad4) ?>
+                                            <?= Yii::$app->formatter->asDecimal($ad4) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                                 <?php
                                 if ($ad5 > 0) {
                                     ?>
                                     <tr>
                                         <td><?= $a5 ?></td>
                                         <td style="text-align: right;">
-    <?= Yii::$app->formatter->asDecimal($ad5) ?>
+                                            <?= Yii::$app->formatter->asDecimal($ad5) ?>
                                         </td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                                 <tr>
-                                    <td style="text-align: right; font-size: 16px;"><b>ราคารวม</b></td>
-                                    <td style="text-align: right;"><?= Yii::$app->formatter->asDecimal($total); ?></td>
+                                    <td style="text-align: right; font-size: 20px;"><b>ราคารวม</b></td>
+                                    <td style="text-align: right; font-size: 20px;"><b><?= Yii::$app->formatter->asDecimal($total); ?></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><b>หมายเหตุ :</b>
+                                    <?= $comment ?>
+                                    </td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
-
+                        <br>
+                        <p style="text-align: center;">
+                        <?= Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank','class' => 'btn btn-info fa fa-print']); ?>
+                            &nbsp;
+                        <?= Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']); ?>
+                        </p>
                     </div>
                     <!-- /.col -->
                 </div>
