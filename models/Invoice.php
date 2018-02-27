@@ -53,7 +53,7 @@ class Invoice extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id', 'leasing_id', 'rental', 'electric_unit', 'electric_price', 'water_unit', 'water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
+            [['id', 'leasing_id', 'rental', 'electric_price','water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
             [['rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from','water_unit_to', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
             
             [['appointment', 'invoice_date'], 'safe'],
@@ -73,7 +73,7 @@ class Invoice extends \yii\db\ActiveRecord {
      */
     public function attributeLabels() {
         return [
-            'id' => 'ID',
+            'id' => 'เลขใบแจ้งหนี้',
             'leasing_id' => 'เลขสัญญา',
             'rental' => 'ค่าห้อง',
             'deposit' => 'ค่าประกันห้อง',

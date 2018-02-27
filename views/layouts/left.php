@@ -39,7 +39,7 @@
                          * 
                          */
                         ['label' => 'ใบแจ้งหนี้','icon' => 'file', 'url' => ['/invoice']],
-                        ['label' => 'ชำระเงิน','icon' => 'money', 'url' => ['/receipt']],
+                        ['label' => 'ใบเสร็จรับเงิน','icon' => 'money', 'url' => ['/receipt']],
                         ['label' => 'ผู้ใช้งาน','icon' => 'user', 'url' => ['/users']],
                         [
                             'label' => 'ออกจากระบบ',

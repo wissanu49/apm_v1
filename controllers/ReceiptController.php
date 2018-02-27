@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use kartik\mpdf\Pdf;
 
 /**
  * ReceiptController implements the CRUD actions for Receipt model.
@@ -18,14 +19,20 @@ class ReceiptController extends Controller {
     /**
      * {@inheritdoc}
      */
+    public $KEY_RUN = 'RE';
+    public $FIELD_NAME = 'id';
+    public $TABLE_NAME = 'receipt';
+    public $Month, $Year, $CODE, $LastID, $Key, $last_id = "";  // เก็บค่าเดือน เช่น 04  date("m")
+    public $last_3_digit, $new_3_digit;
+
     public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'payment'],
+                'only' => ['index', 'update', 'delete', 'payment', 'print'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'payment'],
+                        'actions' => ['index', 'update', 'delete', 'payment', 'print'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -61,7 +68,7 @@ class ReceiptController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
         ]);
     }
@@ -78,7 +85,7 @@ class ReceiptController extends Controller {
 
         $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
         $invoice = \app\models\Invoice::findAll(['id' => $id]);
-        //$model->load($invoice);
+        $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
         //die(print_r($invoice));
         foreach ($invoice as $data) {
             $model->invoice_id = $data['id'];
@@ -103,10 +110,24 @@ class ReceiptController extends Controller {
             $model->refun_2_price = $data['refun_2_price'];
             $model->total = $data['total'];
             $model->comment = $data['comment'];
-            $appointment =  $data['appointment'];
+            $appointment = $data['appointment'];
         }
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            //return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                if ($model->save()) {
+
+                    // update สถานะ ใบแจ้งหนี้
+                    $invoice_status = new \app\models\Invoice();
+                    $status = $invoice_status::findOne($model->invoice_id);
+                    $status->status = 'ชำระแล้ว';
+                    $status->update();
+
+                    return $this->redirect(['viewreceipt', 'id' => $model->id, 'leasing' => $model->leasing_id]);
+                }
+            } catch (Exception $ex) {
+                
+            }
         }
 
         return $this->render('payment', [
@@ -116,6 +137,81 @@ class ReceiptController extends Controller {
                     'invoice' => $invoice,
                     'appointment' => $appointment,
         ]);
+    }
+
+    public function actionViewreceipt($id, $leasing) {
+
+        $model = $this->findModel($id);
+        $room = \app\models\Leasing::find()->select('rooms_id')->where(['id' => $leasing])->one();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing])->one();
+
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('view', [
+                        'model' => $model,
+                        'room' => $room,
+                        'customer' => $dataCustomer,
+            ]);
+        } else {
+            return $this->render('view', [
+                        'model' => $model,
+                        'room' => $room,
+                        'customer' => $dataCustomer,
+            ]);
+        }
+    }
+
+    public function actionPrint($id, $leasing) {
+
+        $model = $this->findModel($id);
+        $room = \app\models\Leasing::find()->select('rooms_id')->where(['id' => $leasing])->one();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing])->one();
+
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
+
+        $content = $this->renderPartial('print', [
+            'model' => $model,
+            'room' => $room,
+            'customer' => $dataCustomer,
+        ]);
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8, //
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4,
+            //'format' => [210,148.5],
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            'marginTop' => 2,
+            'marginBottom' => 5,
+            'marginHeader' => 5,
+            'marginFooter' => 5,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            //'cssFile' => '@web/css/pdf.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:10px}',
+            // set mPDF properties on the fly
+            'options' => ['title' => 'ใบเสร็จรับเงิน'],
+            // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader' => [''],
+                'SetFooter' => ['{PAGENO}'],
+            ]
+        ]);
+
+        $pdf->getApi()->SetJS('this.print();');
+
+        return $pdf->render();
     }
 
     /**
@@ -163,6 +259,43 @@ class ReceiptController extends Controller {
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function RunningCodes($field, $table, $key) {
+
+        $this->Month = date("m");
+        $this->Year = substr((date("Y")), 2);
+
+        $this->CODE = $key . $this->Year . $this->Month;
+        $run = $this->findCode($field, $table, $this->CODE);
+
+        if (isset($run['id'])) {
+
+            $this->last_id = $run['id'];
+            //echo $last_id."<br>";
+            $this->last_3_digit = substr($this->last_id, -3, 3); // ตัดเอาเฉพาะ 4 หลักสุดท้าย
+            //echo $last_4_digit."<br>";
+
+            $this->last_3_digit = $this->last_3_digit + 1;
+            //echo $last_4_digit."<br>";
+            while (strlen($this->last_3_digit) < 3) {
+                $this->last_3_digit = "0" . $this->last_3_digit;
+            }
+            $this->CODE = $this->CODE . $this->last_3_digit;
+            return $this->CODE;
+            //$ObjQry=mysql_query("INSERT INTO create_id(row,id) VALUES('','$CODE')");
+        } else {
+            $this->CODE = $this->CODE . "001";
+            return $this->CODE;
+        }
+    }
+
+    public function findCode($field, $table, $code) {
+        $sql = "SELECT MAX($field) as id FROM $table WHERE $field LIKE '$code%'";
+
+        //$command = Yii::$app()->createCommand($sql);
+        $row = Yii::$app->db->createCommand($sql)->queryOne();
+        return $row;
     }
 
 }

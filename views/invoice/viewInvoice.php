@@ -45,6 +45,7 @@ foreach ($dataProvider as $data) {
     $re2 = $data['refun_2_price'];
     $total = $data['total'];
     $room = $data['room'];
+    $status = $data['status'];
     $cus_name = $data['fullname'];
     $cus_addr = $data['address'];
     $appointment = $data['appointment'];
@@ -104,21 +105,21 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                         </td>
                                     </tr>
                                 <?php } ?>
-                                    <?php
+                                <?php
                                 if ($water_price > 0) {
                                     ?>
                                     <tr>
-                                        <td>ค่าน้ำ ( <?= $water_unit_from." - ".$water_unit_to ?>)</td>
+                                        <td>ค่าน้ำ ( <?= $water_unit_from . " - " . $water_unit_to ?>)</td>
                                         <td style="text-align: right;">
                                             <?= Yii::$app->formatter->asDecimal($water_price) ?>
                                         </td>
                                     </tr>
                                 <?php } ?>
-                                    <?php
+                                <?php
                                 if ($electric_price > 0) {
                                     ?>
                                     <tr>
-                                        <td>ค่าไฟฟ้า ( <?= $electric_unit_from." - ".$electric_unit_to ?>)</td>
+                                        <td>ค่าไฟฟ้า ( <?= $electric_unit_from . " - " . $electric_unit_to ?>)</td>
                                         <td style="text-align: right;">
                                             <?= Yii::$app->formatter->asDecimal($electric_price) ?>
                                         </td>
@@ -190,7 +191,7 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                 </tr>
                                 <tr>
                                     <td style="text-align: left;"><b>หมายเหตุ :</b>
-                                    <?= $comment ?>
+                                        <?= $comment ?>
                                     </td>
                                     <td></td>
                                 </tr>
@@ -198,9 +199,15 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                         </table>
                         <br>
                         <p style="text-align: center;">
-                        <?= Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank','class' => 'btn btn-info fa fa-print']); ?>
-                            &nbsp;
-                        <?= Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']); ?>
+                            <?php
+                            if ($status == 'รอการชำระ') {
+                                Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
+                                ?>
+                                &nbsp;
+                                <?php
+                                Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']);
+                            }
+                            ?>
                         </p>
                     </div>
                     <!-- /.col -->

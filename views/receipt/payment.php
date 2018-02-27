@@ -124,9 +124,9 @@ $dateCreate = date('Y-m-d H:i:s');
                                 <tr>
                                     <td style="text-align: right; font-size: 16px;"><b>ราคารวม</b></td>
                                     <?php
-                                    $total = $model->rental + $model->deposit;
+                                    //$total = $model->rental + $model->deposit;
                                     ?>
-                                    <td><?= $form->field($model, 'total')->textInput(['value' => $total, 'readonly' => 'readonly'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'total')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
                                 </tr>
                             </tbody>
                         </table>

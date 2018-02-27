@@ -30,7 +30,7 @@ Modal::end();
             <!-- /.box-header -->
             <div class="box-body">
                 <?php Pjax::begin(); ?>
-<?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
+                <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
                 <?=
                 GridView::widget([
@@ -59,10 +59,10 @@ Modal::end();
                         //'refun_1_price',
                         //'refun_2',
                         //'refun_2_price',
-                         [
-                          'attribute' => 'total',
+                        [
+                            'attribute' => 'total',
                             //'filter' => true,
-                            'value' => function ($data){
+                            'value' => function ($data) {
                                 return Yii::$app->formatter->asDecimal($data->total);
                             }
                         ],
@@ -70,11 +70,15 @@ Modal::end();
                         'appointment',
                         //'status',
                         [
-                          'attribute' => 'status',
+                            'attribute' => 'status',
                             'format' => 'raw',
                             'filter' => true,
-                            'value' => function ($data){
-                                return Html::button($data->status, [ NULL, 'class' => 'btn btn-warning btn-xs']);
+                            'value' => function ($data) {
+                                if ($data->status == 'รอการชำระ') {
+                                    return Html::button($data->status, [NULL, 'class' => 'btn btn-danger btn-xs']);
+                                }else{
+                                    return Html::button($data->status, [NULL, 'class' => 'btn btn-success btn-xs']);
+                                }
                             }
                         ],
                         //'users_id',
@@ -83,8 +87,12 @@ Modal::end();
                             'attribute' => '',
                             'format' => 'raw',
                             'value' => function ($data) {
-                                return Html::a(' ชำระเงิน', ['receipt/payment', 'leasing' => $data->id], ['class' => 'btn btn-info fa fa-money']
-                                );
+                                if ($data->status == 'รอการชำระ') {
+                                    return Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $data->id, 'leasing' => $data->leasing_id], ['class' => 'btn btn-info fa fa-money']
+                                    );
+                                } else {
+                                    return "&nbsp;";
+                                }
                             }
                         ],
                         [

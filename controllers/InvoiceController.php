@@ -126,8 +126,8 @@ class InvoiceController extends Controller {
             // set to use core fonts only
             'mode' => Pdf::MODE_UTF8, //
             // A4 paper format
-            //'format' => Pdf::FORMAT_A4,
-            'format' => [210,148.5],
+            'format' => Pdf::FORMAT_A4,
+            //'format' => [210,148.5],
             'marginLeft' => 10,
             'marginRight' => 10,
             'marginTop' => 2,
@@ -147,7 +147,7 @@ class InvoiceController extends Controller {
             // any css to be embedded if required
             'cssInline' => '.kv-heading-1{font-size:10px}',
             // set mPDF properties on the fly
-            'options' => ['title' => 'Invoice'],
+            'options' => ['title' => 'ใบแจ้งหนี้'],
             // call mPDF methods on the fly
             'methods' => [
                 'SetHeader'=>[''], 

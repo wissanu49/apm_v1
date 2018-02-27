@@ -54,7 +54,7 @@ class Receipt extends \yii\db\ActiveRecord
         return [
             [['id', 'leasing_id', 'rental', 'total', 'invoice_id', 'users_id'], 'required'],
             [['rental', 'deposit', 'electric_price','water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
-            [['receipt_date'], 'safe'],
+            [['receipt_date','status'], 'safe'],
             [['id', 'leasing_id', 'invoice_id'], 'string', 'max' => 25],
             [['additional_1', 'additional_2', 'additional_3', 'additional_4', 'additional_5', 'refun_1', 'refun_2'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 255],
@@ -71,7 +71,7 @@ class Receipt extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => 'เลขใบเสร็จรับเงิน',
             'leasing_id' => 'สัญญาเช่า',
             'rental' => 'ค่าเช่า',
             'deposit' => 'ค่าประกันห้อง',
@@ -91,11 +91,12 @@ class Receipt extends \yii\db\ActiveRecord
             'refun_1_price' => 'คืนเงิน',
             'refun_2' => 'คืนเงิน',
             'refun_2_price' => 'คืนเงิน',
-            'total' => 'รวม',
+            'total' => 'ยอดรวม',
             'comment' => 'หมายเหตุ',
             'invoice_id' => 'เลขใบแจ้งหนี้',
             'users_id' => 'ผู้รับเงิน',
             'receipt_date' => 'วันที่ชำระ',
+            'status' => 'สถานะ',
         ];
     }
 
