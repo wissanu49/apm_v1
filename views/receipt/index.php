@@ -82,11 +82,11 @@ Modal::end();
                                 'update' => function ($model, $key, $index) {
                                     return false;
                                 },
-                                'delete' => function ($model, $key, $index) {
+                                        'delete' => function ($model, $key, $index) {
                                     return false;
                                 },
                             ],
-                            'template' => '{view}',
+                            'template' => '{view} ',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::button('', ['value' => Url::to(['receipt/viewreceipt', 'id' => $model->id, 'leasing' => $model->leasing_id]),
@@ -95,6 +95,7 @@ Modal::end();
                                                 'class' => 'btn btn-primary fa fa-edit'
                                     ]);
                                 },
+                                
                             ],
                         ],
                     ],

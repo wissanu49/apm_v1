@@ -110,6 +110,7 @@ class Invoice extends \yii\db\ActiveRecord {
         $sn = parent::scenarios();
         $sn['deposit'] = ['id', 'rental', 'deposit', 'total', 'appointment'];
         $sn['create'] = ['id', 'leasing_id', 'rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from', 'water_unit_to','water_price', 'total', 'appointment', 'users_id', 'invoice_date'];
+        //$sn['update_status'] = ['status'];
         return $sn;
     }
 

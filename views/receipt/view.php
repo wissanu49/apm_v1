@@ -125,7 +125,7 @@ $this->title = 'ใบเสร็จรับเงิน';
                             <b>หมายเหตุ : </b> <?= $model->comment ?>
                         </div>
                         <div class="col-lg-12" style="text-align: center;">
-                            <?= Html::a(' ยกเลิกใบเสร็จรับเงิน', ['receipt/reject', 'id' => $model->id, 'leasing' => $model->leasing_id], ['target' => '_blank','class' => 'btn btn-danger fa fa-refresh']) ?>
+                            <?= Html::a(' ยกเลิกใบเสร็จรับเงิน', ['receipt/reject', 'id' => $model->id,'invid' => $model->invoice_id], ['class' => 'btn btn-danger fa fa-trash']) ?>
                             <?= Html::a(' พิมพ์ใบเสร็จรับเงิน', ['receipt/print', 'id' => $model->id, 'leasing' => $model->leasing_id], ['target' => '_blank','class' => 'btn btn-info fa fa-print']) ?>
                         </div>
                     </div>

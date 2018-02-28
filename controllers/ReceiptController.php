@@ -29,10 +29,10 @@ class ReceiptController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'payment', 'print'],
+                'only' => ['index', 'update', 'delete', 'payment', 'print', 'reject'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'payment', 'print'],
+                        'actions' => ['index', 'update', 'delete', 'payment', 'print', 'reject'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -241,7 +241,31 @@ class ReceiptController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id) {
+
         $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionReject($id, $invid) {
+
+        $transection = Yii::$app->db->beginTransaction();
+        $invoice_status = new \app\models\Invoice();
+        $status = $invoice_status::findOne($invid);          
+        $status->status = 'รอการชำระ';
+        //die(print_r($status));
+        if ($status->update()) {
+
+            $this->findModel($id)->delete();
+
+            $transection->commit();
+            Yii::$app->session->setFlash('success', 'ยกเลิกใบเสร็จเรียบร้อยแล้ว');
+            return $this->redirect(['index']);
+        } else {
+            $transection->rollBack();
+            Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด ไม่สามารถยกเลิกรายการได้');
+            return $this->redirect(['index']);
+        }
 
         return $this->redirect(['index']);
     }

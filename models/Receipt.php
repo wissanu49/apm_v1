@@ -59,6 +59,7 @@ class Receipt extends \yii\db\ActiveRecord
             [['additional_1', 'additional_2', 'additional_3', 'additional_4', 'additional_5', 'refun_1', 'refun_2'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 255],
             [['id'], 'unique'],
+            [['status'], 'required', 'on' => 'update_status'],
             [['leasing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Leasing::className(), 'targetAttribute' => ['leasing_id' => 'id']],
             [['invoice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Invoice::className(), 'targetAttribute' => ['invoice_id' => 'id']],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
@@ -98,6 +99,12 @@ class Receipt extends \yii\db\ActiveRecord
             'receipt_date' => 'วันที่ชำระ',
             'status' => 'สถานะ',
         ];
+    }
+    
+    public function scenarios() {
+        $sn = parent::scenarios();
+        $sn['update_status'] = ['status'];        
+        return $sn;
     }
 
     /**
