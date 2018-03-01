@@ -101,16 +101,16 @@ Modal::end();
                             'label' => 'หน่วยไฟฟ้า/ปะปา',
                             'format' => 'raw',
                             'value' => function($data) {
-                                return Html::button(' บันทึกหน่วยไฟฟ้า/ปะปา', ['value' => Url::to(['energies/add', 'room' => $data->id]),
-                                            'title' => 'บันทึกหน่วยไฟฟ้า/ปะปา : ' . $data['name'],
+                                return Html::button(' หน่วยไฟฟ้า/ปะปา', ['value' => Url::to(['energies/add', 'room' => $data->id]),
+                                            'title' => 'หน่วยไฟฟ้า/ปะปา : ' . $data['name'],
                                             'id' => 'showModalButton',
                                             'class' => 'btn btn-info fa fa-flash',
                                         ]) . " " .
-                                        Html::a(' รายการบันทึกทั้งหมด', ['energies/histories', 'room' => $data->id],[
+                                        Html::button(' ประวัติ', ['value' => Url::to(['energies/histories', 'room' => $data->id]),
                                             'title' => 'รายการบันทึกทั้งหมด : ' . $data['name'],
-                                            //'id' => 'showModalButton',
-                                            'class' => 'btn btn-warning fa fa-database',
-                                ]);
+                                            'id' => 'showModalButton',
+                                            'class' => 'btn btn-warning fa fa-flash',
+                                        ]);
                             }
                         ],
                         [
@@ -131,6 +131,23 @@ Modal::end();
                                                 'id' => 'showModalButton',
                                                 'class' => 'btn btn-danger fa fa-arrow-left',
                                     ]);
+                                }
+                            }
+                        ],
+                                [
+                            'attribute' => '',
+                            'label' => 'ออกใบแจ้งหนี้',
+                            'format' => 'raw',
+                            'value' => function($data) {
+                                $status = \app\models\Leasing::checkRooms($data->id);
+                                if ($status == false) {
+                                    return Html::a(' ออกใบแจ้งหนี้', ['invoice/create', 'room' => $data->id],[
+                                                'title' => 'ออกใบแจ้งหนี้ : ' . $data['name'],
+                                                //'id' => 'showModalButton',
+                                                'class' => 'btn btn-success fa fa-arrow-right',
+                                    ]);
+                                }else{
+                                    return "";
                                 }
                             }
                         ],

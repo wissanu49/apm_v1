@@ -30,10 +30,10 @@ class InvoiceController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'deposit', 'invoice', 'print'],
+                'only' => ['index', 'update', 'delete', 'create', 'deposit', 'invoice', 'print'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'deposit', 'invoice', 'print'],
+                        'actions' => ['index', 'update', 'delete', 'create','deposit', 'invoice', 'print'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -62,6 +62,49 @@ class InvoiceController extends Controller {
         ]);
     }
 
+    public function actionCreate($room) {
+        $model = new Invoice();
+        $model->scenario = 'create';
+
+        $leasing = \app\models\Leasing::find()->select(['id'])->where(['rooms_id' => $room, 'status'=>'IN'])->one();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['customers_id' => $leasing->id])->one();
+
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
+        $rental = \app\models\Rooms::getPrice($room);
+        //$deposit = \app\models\Rooms::getDeposit($room);
+        $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
+        $model->leasing_id = $leasing->id;
+        $model->rental = $rental;
+        //$model->deposit = $deposit;
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            //die(print_r($_POST));
+
+            try {
+                $transection = \Yii::$app->db->beginTransaction();
+                //die(print_r($model));
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                    $transection->commit();
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                    //return $this->redirect(['index']);
+                }
+            } catch (Exception $ex) {
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.'.$ex);
+                //return $this->redirect(['create']);
+            }
+        }
+
+        return $this->render('create', [
+                    'model' => $model,
+                    //'room' => $room,
+                    //'customer' => $dataCustomer,
+        ]);
+    }
     /**
      * Displays a single Invoice model.
      * @param string $id
@@ -183,6 +226,7 @@ class InvoiceController extends Controller {
         $model->leasing_id = $leasing;
         $model->rental = $rental;
         $model->deposit = $deposit;
+        $model->rooms_id = $room;
 
         if ($model->load(Yii::$app->request->post())) {
 

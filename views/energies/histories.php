@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <td><?= $data['peroid'] ?></td>
                                 <td><?= $data['electric_unit'] ?></td>
                                 <td><?= $data['water_unit'] ?></td>
-                                <td><?= Html::a(' แก้ไข', ['energies/edit', 'id' => $data->id],[
+                                <td><?= Html::a(' แก้ไข', ['energies/update', 'id' => $data->id],[
                                             'class' => 'btn btn-warning fa fa-edit',]) ?></td>
                             </tr>
                         <?php $i++; } ?>

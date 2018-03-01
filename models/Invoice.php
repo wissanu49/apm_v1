@@ -53,8 +53,8 @@ class Invoice extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id', 'leasing_id', 'rental', 'electric_price','water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
-            [['rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from','water_unit_to', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
+            [['id', 'leasing_id', 'rooms_id' ,'rental', 'electric_price','water_price', 'total', 'appointment', 'users_id', 'invoice_date'], 'required'],
+            [['rental', 'rooms_id' ,'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from','water_unit_to', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
             
             [['appointment', 'invoice_date'], 'safe'],
             [['status'], 'string'],
@@ -75,6 +75,7 @@ class Invoice extends \yii\db\ActiveRecord {
         return [
             'id' => 'เลขใบแจ้งหนี้',
             'leasing_id' => 'เลขสัญญา',
+            'rooms_id' => 'ห้องพัก',
             'rental' => 'ค่าห้อง',
             'deposit' => 'ค่าประกันห้อง',
             'electric_unit_from' => 'หน่วยไฟฟ้าครั้งก่อน',
@@ -109,7 +110,7 @@ class Invoice extends \yii\db\ActiveRecord {
     public function scenarios() {
         $sn = parent::scenarios();
         $sn['deposit'] = ['id', 'rental', 'deposit', 'total', 'appointment'];
-        $sn['create'] = ['id', 'leasing_id', 'rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from', 'water_unit_to','water_price', 'total', 'appointment', 'users_id', 'invoice_date'];
+        $sn['create'] = ['id', 'rooms_id', 'rental', 'deposit', 'electric_unit_from','electric_unit_to', 'electric_price', 'water_unit_from', 'water_unit_to','water_price', 'total', 'appointment', 'users_id', 'invoice_date'];
         //$sn['update_status'] = ['status'];
         return $sn;
     }

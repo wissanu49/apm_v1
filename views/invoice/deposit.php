@@ -35,6 +35,7 @@ $dateCreate = date('Y-m-d H:i:s');
                 <!-- Table row -->
                 <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
                 <?= $form->field($model, 'leasing_id')->hiddenInput()->label(false) ?>
+                 <?= $form->field($model, 'rooms_id')->hiddenInput()->label(false) ?>
                  <?= $form->field($model, 'electric_unit')->hiddenInput(['value'=>0])->label(false) ?>
                  <?= $form->field($model, 'electric_price')->hiddenInput(['value'=>0])->label(false) ?>
                  <?= $form->field($model, 'water_unit')->hiddenInput(['value'=>0])->label(false) ?>

@@ -93,10 +93,10 @@ class CustomersController extends Controller {
                 } else {
                     Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
                     $transection->rollBack();
-                    return $this->redirect(['create']);
+                    return $this->redirect(['index']);
                 }
             } catch (Exception $ex) {
-                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.'.$ex);
                 return $this->redirect(['create']);
             }
         }

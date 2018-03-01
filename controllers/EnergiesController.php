@@ -85,7 +85,7 @@ class EnergiesController extends Controller {
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
                     $transection->commit();
-                    return $this->redirect(['histories', 'room' => $model->rooms_id]);
+                    return $this->redirect(['rooms/index']);
                 }
             } catch (Exception $ex) {
                 Yii::$app->session->setFlash('error', $ex);
@@ -102,7 +102,7 @@ class EnergiesController extends Controller {
         $dataProvider = Energies::find()->where(['rooms_id' => $room])->orderBy('id DESC')->all();
         $rooms = \app\models\Rooms::find()->select('name')->where(['id' => $room])->one();
         //die(print_r($dataProvider));
-        return $this->render('histories', [
+        return $this->renderAjax('histories', [
                     'dataProvider' => $dataProvider,
             'roomname' => $rooms->name,
         ]);
@@ -120,8 +120,12 @@ class EnergiesController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            
+            if($model->save()){
+                return $this->redirect(['rooms/index']);
+            }
+            
             //return $this->goBack();
         }
 
