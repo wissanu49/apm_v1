@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'peroid',
             'water_unit',
             'electric_unit',
-            'rooms_id',
+            'rooms.name',
             //'users_id',
             //'record_date',
 

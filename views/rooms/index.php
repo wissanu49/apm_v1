@@ -101,14 +101,14 @@ Modal::end();
                             'label' => 'หน่วยไฟฟ้า/ปะปา',
                             'format' => 'raw',
                             'value' => function($data) {
-                                return Html::button(' บันทึกหน่วยไฟฟ้า/ปะปา', ['value' => Url::to(['energies/create', 'room' => $data->id]),
-                                            'title' => 'บันทึกหน่วยไฟฟ้า : ' . $data['name'],
+                                return Html::button(' บันทึกหน่วยไฟฟ้า/ปะปา', ['value' => Url::to(['energies/add', 'room' => $data->id]),
+                                            'title' => 'บันทึกหน่วยไฟฟ้า/ปะปา : ' . $data['name'],
                                             'id' => 'showModalButton',
                                             'class' => 'btn btn-info fa fa-flash',
                                         ]) . " " .
-                                        Html::button(' รายการบันทึกทั้งหมด', ['value' => Url::to(['energies/histories', 'room' => $data['id']]),
+                                        Html::a(' รายการบันทึกทั้งหมด', ['energies/histories', 'room' => $data->id],[
                                             'title' => 'รายการบันทึกทั้งหมด : ' . $data['name'],
-                                            'id' => 'showModalButton',
+                                            //'id' => 'showModalButton',
                                             'class' => 'btn btn-warning fa fa-database',
                                 ]);
                             }

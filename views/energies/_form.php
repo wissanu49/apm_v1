@@ -16,16 +16,15 @@ use dosamigos\datepicker\DatePicker;
 <?= $form->field($model, 'rooms_id')->hiddenInput()->label(FALSE) ?>
 
 
-<?= DatePicker::widget([
-    'model' => $model,
-    'attribute' => 'peroid',
+<?= $form->field($model, 'peroid')->widget(DatePicker::className(),[
     'template' => '{input}{addon}',
     'options' => ['placeholder' => 'รอบวันที่...'],
+    'language' => 'th',
         'clientOptions' => [
             'autoclose' => true,
-            'format' => 'dd-mm-yyyy',
+            'format' => 'yyyy-mm-dd',
             'todayHighlight' => true,
-            'language' => 'th'
+            
         ]
 ]);?>
 
@@ -35,12 +34,12 @@ use dosamigos\datepicker\DatePicker;
 
 
 
-<?php // $form->field($model, 'users_id')->textInput() ?>
+<?= $form->field($model, 'users_id')->hiddenInput()->label(false) ?>
 
-<?php // $form->field($model, 'record_date')->textInput() ?>
+<?= $form->field($model, 'record_date')->hiddenInput()->label(false) ?>
 
 <div class="form-group">
-<?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+<?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success fa fa-save']) ?>
 </div>
 
 <?php ActiveForm::end(); ?>

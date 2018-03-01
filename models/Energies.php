@@ -36,8 +36,8 @@ class Energies extends \yii\db\ActiveRecord
         return [
             [['peroid', 'water_unit', 'electric_unit', 'rooms_id', 'users_id', 'record_date'], 'required'],
             [['water_unit', 'electric_unit', 'rooms_id', 'users_id'], 'integer'],
-            [['record_date'], 'safe'],
-            [['peroid'], 'string', 'max' => 45],
+            [['record_date', 'peroid'], 'safe'],
+            [['peroid', 'water_unit', 'electric_unit', 'rooms_id'], 'required', 'on' => 'add_data'],
             [['rooms_id'], 'exist', 'skipOnError' => true, 'targetClass' => Rooms::className(), 'targetAttribute' => ['rooms_id' => 'id']],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
         ];
@@ -59,6 +59,12 @@ class Energies extends \yii\db\ActiveRecord
         ];
     }
 
+    public function scenarios() {
+        $sn = parent::scenarios();
+        $sn['add_data'] = ['peroid', 'water_unit', 'electric_unit', 'rooms_id'];
+        
+        return $sn;
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
