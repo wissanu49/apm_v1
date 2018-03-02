@@ -5,18 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Invoice */
 /* @var $form yii\widgets\ActiveForm */
-$dataOption = [
-    'ค่าประกันห้อง (Deposit)' => 'ค่าประกันห้อง (Deposit)',
-    'ค่าส่วนกลาง (Facility)' => 'ค่าส่วนกลาง (Facility)',
-    'ค่าโทรศัพท์ (Telephone)' => 'ค่าโทรศัพท์ (Telephone)',
-    'ค่าเคเบิลทีวี (Cable TV)' => 'ค่าเคเบิลทีวี (Cable TV)',
-    'ค่าปรับ (Penalty fee)' => 'ค่าปรับ (Penalty fee)',
-    'ค่าซ่อมบำรุง (Maintenance)' => 'ค่าซ่อมบำรุง (Maintenance)',
-    'ค่าซ่อมบำรุง (Maintenance)' => 'ค่าซ่อมบำรุง (Maintenance)',
-    'ค่าเช่าเฟอร์นิเจอร์ (Furniture)' => 'ค่าเช่าเฟอร์นิเจอร์ (Furniture)',
-    'ค่าบริการ (Service)' => 'ค่าบริการ (Service)',
-    'ค้างจ่าย (Arrears)' => 'ค้างจ่าย (Arrears)',
-];
+
 
 foreach ($dataProvider as $data) {
     $inv_id = $data['id'];
@@ -200,12 +189,12 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                         <br>
                         <p style="text-align: center;">
                             <?php
-                            if ($status == 'รอการชำระ') {
-                                Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
+                            if ($status === 'รอการชำระ') {
+                               echo Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
                                 ?>
                                 &nbsp;
                                 <?php
-                                Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']);
+                               echo Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']);
                             }
                             ?>
                         </p>

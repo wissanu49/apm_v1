@@ -104,6 +104,8 @@ class Invoice extends \yii\db\ActiveRecord {
             'status' => 'สถานะการชำระ',
             'users_id' => 'Users ID',
             'invoice_date' => 'วันที่ออกใบแจ้งหนี้',
+            //'water_unit_total' => 'หน่วยน้ำปะปารวม',
+            //'electric_unit_total' => 'หน่วยไฟฟ้ารวม',
         ];
     }
 

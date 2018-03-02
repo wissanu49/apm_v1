@@ -89,4 +89,27 @@ class Energies extends \yii\db\ActiveRecord
     {
         return new EnergiesQuery(get_called_class());
     }
+    
+    public function getElectric($room){
+        $get = Energies::find()->select(['electric_unit', 'peroid'])->where(['rooms_id' => $room])->orderBy('peroid DESC')->limit('2')->all();
+        //die(print_r($get));
+        if($get != NULL){
+            return $get;
+        }else{
+            $get->electric_unit = "-";
+            $get->peroid = "-";
+            return $get;
+        }
+    }
+    
+    public function getWater($room){
+        $get = Energies::find()->select(['water_unit','peroid'])->where(['rooms_id' => $room])->orderBy('peroid DESC')->limit('2')->all();
+        if($get != NULL){
+            return $get;
+        }else{
+            $get->water_unit = "ไม่พบข้อมูล";
+            $get->peroid = "-";
+            return $get;
+        }
+    }
 }

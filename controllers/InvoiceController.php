@@ -67,16 +67,16 @@ class InvoiceController extends Controller {
         $model->scenario = 'create';
 
         $leasing = \app\models\Leasing::find()->select(['id'])->where(['rooms_id' => $room, 'status'=>'IN'])->one();
-        $customer = \app\models\Leasing::find()->select('customers_id')->where(['customers_id' => $leasing->id])->one();
-
-        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing->id])->one();
+        
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer->customers_id])->all();
         $rental = \app\models\Rooms::getPrice($room);
         //$deposit = \app\models\Rooms::getDeposit($room);
         $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
         $model->leasing_id = $leasing->id;
         $model->rental = $rental;
-        //$model->deposit = $deposit;
-
+        
+        $config = \app\models\Company::find()->all();
         if ($model->load(Yii::$app->request->post())) {
 
             //die(print_r($_POST));
@@ -99,10 +99,11 @@ class InvoiceController extends Controller {
             }
         }
 
-        return $this->render('create', [
+        return $this->render('_create', [
                     'model' => $model,
-                    //'room' => $room,
-                    //'customer' => $dataCustomer,
+                    'room' => $room,
+                    'customer' => $dataCustomer,
+                    'config' => $config,
         ]);
     }
     /**
