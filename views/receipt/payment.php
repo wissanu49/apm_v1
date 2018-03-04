@@ -88,18 +88,24 @@ $dateCreate = date('Y-m-d H:i:s');
                                             <?= $form->field($model, 'deposit')->textInput(['readonly' => 'readonly'])->label(false) ?>
                                         </td>
                                     </tr>
+                                <?php } else { ?>
+                                    <?= $form->field($model, 'deposit')->hiddenInput()->label(false) ?>
                                 <?php } ?>
                                 <?php if ($model->electric_price > 0) { ?>
                                     <tr>
                                         <td>ค่าไฟฟ้า</td>
                                         <td><?= $form->field($model, 'electric_price')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
                                     </tr>
+                                <?php } else { ?>
+                                    <?= $form->field($model, 'electric_price')->hiddenInput()->label(false) ?>
                                 <?php } ?>
                                 <?php if ($model->water_price > 0) { ?>
                                     <tr>
                                         <td>ค่าน้ำปะปา</td>
                                         <td><?= $form->field($model, 'water_price')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
                                     </tr>
+                                <?php } else { ?>
+                                    <?= $form->field($model, 'water_price')->hiddenInput()->label(false) ?>
                                 <?php } ?>
                                 <tr>
                                     <td><?= $form->field($model, 'additional_1')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
@@ -120,6 +126,18 @@ $dateCreate = date('Y-m-d H:i:s');
                                 <tr>
                                     <td><?= $form->field($model, 'additional_5')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
                                     <td><?= $form->field($model, 'additional_5_price')->textInput()->label(false) ?></td>
+                                </tr>
+                                 <tr>
+                                    <td style="text-align: center;"><h4>การคืนเงิน</h4></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $form->field($model, 'refun_1')->textInput(['readonly'=>'readonly'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'refun_1_price')->textInput(['readonly'=>'readonly'])->label(false) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $form->field($model, 'refun_2')->textInput(['placeholder' => 'คืนเงิน'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'refun_2_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: right; font-size: 16px;"><b>ราคารวม</b></td>
@@ -162,6 +180,8 @@ $dateCreate = date('Y-m-d H:i:s');
             <?php
             $this->RegisterJs("
     $('document').ready(function(){
+    
+        TotalCal();
           
         $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();
@@ -179,6 +199,13 @@ $dateCreate = date('Y-m-d H:i:s');
            TotalCal();
         });
         
+        $('#" . Html::getInputId($model, 'refun_1_price') . "').change(function(e){ 
+           TotalCal();
+        });
+        $('#" . Html::getInputId($model, 'refun_2_price') . "').change(function(e){ 
+           TotalCal();
+        });
+        
 
         function TotalCal(){
             var amount = 0;
@@ -191,7 +218,10 @@ $dateCreate = date('Y-m-d H:i:s');
             var a3 = 0;
             var a4 = 0;
             var a5 = 0;
+            var refun1 = 0;
+            var refun2 = 0;
             var total = 0;
+            var total_refun = 0;
             
             amount = parseInt($('#" . Html::getInputId($model, 'total') . "').val());
             room = parseInt($('#" . Html::getInputId($model, 'rental') . "').val());
@@ -203,6 +233,8 @@ $dateCreate = date('Y-m-d H:i:s');
             a3 = parseInt($('#" . Html::getInputId($model, 'additional_3_price') . "').val());
             a4 = parseInt($('#" . Html::getInputId($model, 'additional_4_price') . "').val());
             a5 = parseInt($('#" . Html::getInputId($model, 'additional_5_price') . "').val());
+            refun1 = parseInt($('#" . Html::getInputId($model, 'refun_1_price') . "').val());
+            refun2 = parseInt($('#" . Html::getInputId($model, 'refun_2_price') . "').val());
             
             if(!isNaN(a1) && a1.length != 0){
                 total += a1;
@@ -225,8 +257,15 @@ $dateCreate = date('Y-m-d H:i:s');
             if(!isNaN(water) && water.length != 0){
                 total += water;
             }
+            if(!isNaN(refun1) && refun1.length != 0){
+                total_refun += refun1;
+            }
+            if(!isNaN(refun2) && refun2.length != 0){
+                total_refun += refun2;
+            }
             
-            total = total + (room + deposit);          
+            total = total + (room + deposit);      
+            total = total - total_refun;
             $('#" . Html::getInputId($model, 'total') . "').val(total);  
         }
         

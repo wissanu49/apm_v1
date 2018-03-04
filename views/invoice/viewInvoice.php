@@ -68,7 +68,7 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <b>ห้อง : </b><?= $room ?><br>
+                                <h4>ห้อง : <?= $room ?></h4>
                                 <b>ลูกค้า : </b><?= $cus_name ?><br>
                                 <b>ที่อยู่ : </b><?= $cus_addr ?>
                             </div>
@@ -174,8 +174,29 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                         </td>
                                     </tr>
                                 <?php } ?>
+                                <?php
+                                if ($re1 > 0) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $r1 ?></td>
+                                        <td style="text-align: right;">
+                                            <?= "-".Yii::$app->formatter->asDecimal($re1) ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                                <?php
+                                if ($re2 > 0) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $r2 ?></td>
+                                        <td style="text-align: right;">
+                                            <?= "-".Yii::$app->formatter->asDecimal($re2) ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
                                 <tr>
-                                    <td style="text-align: right; font-size: 20px;"><b>ราคารวม</b></td>
+                                    <td style="text-align: right; font-size: 20px;"><b>รวม</b></td>
                                     <td style="text-align: right; font-size: 20px;"><b><?= Yii::$app->formatter->asDecimal($total); ?></b></td>
                                 </tr>
                                 <tr>
@@ -190,11 +211,11 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                         <p style="text-align: center;">
                             <?php
                             if ($status === 'รอการชำระ') {
-                               echo Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
+                                echo Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
                                 ?>
                                 &nbsp;
                                 <?php
-                               echo Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']);
+                                echo Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv_id, 'leasing' => $leasing_id], ['class' => 'btn btn-warning fa fa-money']);
                             }
                             ?>
                         </p>

@@ -45,7 +45,7 @@ class Leasing extends \yii\db\ActiveRecord {
             [['id', 'leasing_code'], 'string', 'max' => 25],
             [['id'], 'unique'],
             [['move_in', 'users_id', 'rooms_id', 'customers_id', 'status', 'comment', 'deposit', 'leasing_date'], 'required', 'on' => 'checkin'],
-            [['move_out', 'rooms_id', 'customers_id'], 'required', 'on' => 'checkout'],
+            [['move_out', 'rooms_id', 'status'], 'required', 'on' => 'checkout'],
             [['customers_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customers_id' => 'id']],
             [['rooms_id'], 'exist', 'skipOnError' => true, 'targetClass' => Rooms::className(), 'targetAttribute' => ['rooms_id' => 'id']],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
@@ -74,7 +74,7 @@ class Leasing extends \yii\db\ActiveRecord {
     public function scenarios() {
         $sn = parent::scenarios();
         $sn['checkin'] = ['id','move_in', 'rooms_id', 'customers_id', 'status', 'deposit'];
-        $sn['checkout'] = ['move_out', 'status'];
+        $sn['checkout'] = ['move_out', 'status', 'rooms_id'];
         return $sn;
     }
 

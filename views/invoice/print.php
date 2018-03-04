@@ -65,17 +65,19 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                             <h4>LYMRR</h4>
                         </td>
                         <td style="width: 50%; text-align: right;">
+                            
                             <h4>ใบแจ้งหนี้</h4>
                             <b>เลขที่ : </b><?= $inv_id; ?>
                         </td>
                     </tr>
                     <tr>
                         <td style="width: 50%;">
-                            <b>ห้อง : </b><?= $room ?><br>
+                            <h4>ห้อง : <?= $room ?></h4>
                             <b>ลูกค้า : </b><?= $cus_name ?><br>
                             <b>ที่อยู่ : </b><?= $cus_addr ?>
                         </td>
                         <td style="width: 50%; text-align: right;">
+                            
                             <b>กำหนดชำระ: </b><?= $appointment ?>
                         </td>
                     </tr>

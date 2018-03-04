@@ -19,7 +19,7 @@ $form->field($model, 'rooms_id')->dropDownList(
         ArrayHelper::map(app\models\Rooms::find()->all(), 'id', 'name'), ['disabled' => true])
 ?>
 
-<?= $form->field($model, 'customers_id')->dropDownList(ArrayHelper::map(app\models\Customers::find()->select(['id', 'fullname'])->all(), 'id', 'fullname'), ['prompt' => 'เลือกผู้เช่า']) ?>
+<?= $form->field($model, 'customers_id')->dropDownList(ArrayHelper::map(app\models\Customers::find()->select(['id', 'fullname'])->all(), 'id', 'fullname'), ['prompt' => 'เลือกผู้เช่า','disabled'=>'disabled']) ?>
 
 <?=
 $form->field($model, 'move_in')->widget(
@@ -29,7 +29,7 @@ $form->field($model, 'move_in')->widget(
     // modify template for custom rendering
     //'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
     'template' => '{input}{addon}',
-    'options' => ['placeholder' => 'วันที่ย้ายออก'],
+    'options' => ['placeholder' => 'วันที่ย้ายออก', 'disabled'=>'disabled'],
     'value' => date('Y-m-d'),
     'language' => 'th',
     'clientOptions' => [
@@ -40,7 +40,7 @@ $form->field($model, 'move_in')->widget(
 ]);
 ?>
 
-<?php /*
+<?=
 $form->field($model, 'move_out')->widget(
         DatePicker::className(), [
     // inline too, not bad
@@ -57,8 +57,6 @@ $form->field($model, 'move_out')->widget(
         'todayHighlight' => true,
     ]
 ]);
- * 
- */
 ?>
 
 <?php // $form->field($model, 'users_id')->hiddenInput()->label(false) ?>
@@ -66,7 +64,7 @@ $form->field($model, 'move_out')->widget(
 
 <?php // $form->field($model, 'leasing_date')->textInput() ?>
 
-<?= $form->field($model, 'status')->dropDownList(['IN' => 'IN', 'CANCEL' => 'CANCEL',]) ?>
+<?= $form->field($model, 'status')->dropDownList(['OUT' => 'OUT']) ?>
 
 <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 

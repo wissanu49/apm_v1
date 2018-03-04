@@ -66,14 +66,20 @@ Modal::end();
                                 if ($data->status == "IN") {
                                     return Html::button(' เข้าอยู่ ', [
                                                 'value' => NULL,
-                                                'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
+                                                //'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
                                                 'class' => 'btn btn-success fa fa-lock'
                                     ]);
                                 } else if ($data->status == "OUT") {
-                                    return Html::button(' ย้ายออก ', [
+                                    return Html::button(' ย้ายออกแล้ว ', [
                                                 'value' => NULL,
-                                                'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
-                                                'class' => 'btn btn-success fa fa-unlock'
+                                                //'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
+                                                'class' => 'btn btn-danger fa fa-unlock'
+                                    ]);
+                                }else if ($data->status == "CANCEL") {
+                                    return Html::button(' ยกเลิก ', [
+                                                'value' => NULL,
+                                                //'title' => 'ออกใบแจ้งหนี้ประกันห้อง',
+                                                'class' => 'btn btn-warning fa fa-unlock'
                                     ]);
                                 }
                             }

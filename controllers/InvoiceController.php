@@ -30,10 +30,10 @@ class InvoiceController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'create', 'deposit', 'invoice', 'print'],
+                'only' => ['index', 'update', 'delete', 'create', 'deposit', 'invoice', 'checkout', 'print'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'create','deposit', 'invoice', 'print'],
+                        'actions' => ['index', 'update', 'delete', 'create','deposit', 'invoice','checkout', 'print'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -66,7 +66,7 @@ class InvoiceController extends Controller {
         $model = new Invoice();
         $model->scenario = 'create';
 
-        $leasing = \app\models\Leasing::find()->select(['id'])->where(['rooms_id' => $room, 'status'=>'IN'])->one();
+        $leasing = \app\models\Leasing::find()->select('id')->where(['rooms_id' => $room, 'status'=>'IN'])->one();
         $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing->id])->one();
         
         $dataCustomer = \app\models\Customers::find()->where(['id' => $customer->customers_id])->all();
@@ -104,6 +104,52 @@ class InvoiceController extends Controller {
                     'room' => $room,
                     'customer' => $dataCustomer,
                     'config' => $config,
+        ]);
+    }
+    
+    public function actionCheckout($room,$leasing) {
+        $model = new Invoice();
+        //$model->scenario = 'checkout';
+
+        //$leasing = \app\models\Leasing::find()->select('id')->where(['rooms_id' => $room, 'status'=>'IN'])->one();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing])->one();
+        
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer->customers_id])->all();
+        $rental = \app\models\Rooms::getPrice($room);
+        $deposit = \app\models\Rooms::getDeposit($room);
+        $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
+        $model->leasing_id = $leasing;
+        $model->rental = $rental;
+        
+        $config = \app\models\Company::find()->all();
+        if ($model->load(Yii::$app->request->post())) {
+
+            //die(print_r($_POST));
+
+            try {
+                $transection = \Yii::$app->db->beginTransaction();
+                //die(print_r($model));
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                    $transection->commit();
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                    //return $this->redirect(['index']);
+                }
+            } catch (Exception $ex) {
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.'.$ex);
+                //return $this->redirect(['create']);
+            }
+        }
+
+        return $this->render('checkout', [
+                    'model' => $model,
+                    'room' => $room,
+                    'customer' => $dataCustomer,
+                    'config' => $config,
+                    'deposit' => $deposit,
         ]);
     }
     /**
@@ -215,19 +261,19 @@ class InvoiceController extends Controller {
      */
     public function actionDeposit($leasing) {
         $model = new Invoice();
-        //$model->scenario = 'deposit';
+        $model->scenario = 'deposit';
 
         $room = \app\models\Leasing::find()->select('rooms_id')->where(['id' => $leasing])->one();
         $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing])->one();
 
-        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer])->all();
-        $rental = \app\models\Rooms::getPrice($room);
-        $deposit = \app\models\Rooms::getDeposit($room);
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer->customers_id])->all();
+        $rental = \app\models\Rooms::getPrice($room->rooms_id);
+        $deposit = \app\models\Rooms::getDeposit($room->rooms_id);
         $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
         $model->leasing_id = $leasing;
         $model->rental = $rental;
         $model->deposit = $deposit;
-        $model->rooms_id = $room;
+        $model->rooms_id = $room->rooms_id;
 
         if ($model->load(Yii::$app->request->post())) {
 

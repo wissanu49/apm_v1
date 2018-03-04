@@ -28,10 +28,10 @@ class LeasingController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'create', 'checkin'],
+                'only' => ['index', 'update', 'delete', 'create', 'checkin', 'checkout'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'create', 'checkin'],
+                        'actions' => ['index', 'update', 'delete', 'create', 'checkin', 'checkout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -99,23 +99,73 @@ class LeasingController extends Controller {
             $transection = Yii::$app->db->beginTransaction();
             $model->leasing_date = date('Y-m-d H:i:s');
             $model->users_id = Yii::$app->user->identity->id;
+
+            $roomsModel = \app\models\Rooms::findOne($model->rooms_id);
             try {
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
-                    $transection->commit();
-                    return $this->redirect(['index']);
+
+                    $roomsModel->status = 'ไม่ว่าง';
+                    if ($roomsModel->update()) {
+                        $transection->commit();
+                        return $this->redirect(['rooms/index']);
+                    }
                 } else {
                     Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
                     $transection->rollBack();
-                    return $this->redirect(['index']);
+                    return $this->redirect(['rooms/index']);
                 }
             } catch (Exception $ex) {
-                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.' . $ex);
                 //return $this->redirect(['create']);
             }
         }
 
         return $this->renderAjax('create', [
+                    'model' => $model,
+        ]);
+    }
+
+    public function actionCheckout($room) {
+
+        //$model = new Leasing();
+        //$model->scenario = 'checkout';
+        //$model = $this->findModel();
+
+        $leasing = Leasing::find()->select('id')->where(['rooms_id' => $room, 'status' => 'IN'])->one();
+        //$model = Leasing::findOne($leasing_id->rooms_id);
+        //die($leasing_id->id);
+        $model = $this->findModel($leasing->id);
+        //$model->scenario = 'checkout';
+        // die(print_r($model));
+        if ($model->load(Yii::$app->request->post())) {
+            $transection = Yii::$app->db->beginTransaction();
+            //$model->leasing_date = date('Y-m-d H:i:s');
+            //$model->users_id = Yii::$app->user->identity->id;
+
+            $roomsModel = \app\models\Rooms::findOne($model->rooms_id);
+            //$roomsModel->scenario = 'checkout';
+            try {
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+
+                    $roomsModel->status = 'ว่าง';
+                    if ($roomsModel->update()) {
+                        $transection->commit();
+                        return $this->redirect(['invoice/checkout', 'room' => $model->rooms_id, 'leasing' => $model->id]);
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                    return $this->redirect(['rooms/index']);
+                }
+            } catch (Exception $ex) {
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.' . $ex);
+                //return $this->redirect(['create']);
+            }
+        }
+
+        return $this->renderAjax('checkout', [
                     'model' => $model,
         ]);
     }
@@ -131,11 +181,11 @@ class LeasingController extends Controller {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-             try {
+            try {
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
                     $transection->commit();
-                   return $this->redirect(['index']);
+                    return $this->redirect(['index']);
                 } else {
                     Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
                     $transection->rollBack();

@@ -80,6 +80,7 @@ class ReceiptController extends Controller {
      */
     public function actionPayment($id, $leasing) {
         $model = new Receipt();
+        //$model->scenario = 'payment';
         $room = \app\models\Leasing::find()->select('rooms_id')->where(['id' => $leasing])->one();
         $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $leasing])->one();
 
@@ -91,7 +92,12 @@ class ReceiptController extends Controller {
             $model->invoice_id = $data['id'];
             $model->leasing_id = $data['leasing_id'];
             $model->rental = $data['rental'];
-            $model->deposit = $data['deposit'];
+            if($data['deposit'] == NULL){
+                $model->deposit = 0;
+            }else{
+                $model->deposit = $data['deposit'];
+            }
+            
             $model->water_price = $data['water_price'];
             $model->electric_price = $data['electric_price'];
             $model->additional_1 = $data['additional_1'];
@@ -111,9 +117,11 @@ class ReceiptController extends Controller {
             $model->total = $data['total'];
             $model->comment = $data['comment'];
             $appointment = $data['appointment'];
+                     
         }
         if ($model->load(Yii::$app->request->post())) {
             //return $this->redirect(['view', 'id' => $model->id]);
+           
             try {
                 if ($model->save()) {
 

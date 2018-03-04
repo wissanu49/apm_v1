@@ -126,15 +126,19 @@ Modal::end();
                                                 'class' => 'btn btn-success fa fa-arrow-right',
                                     ]);
                                 }else{
+                                    
                                     return Html::button(' ย้ายออก', ['value' => Url::to(['leasing/checkout', 'room' => $data->id]),
                                                 'title' => 'ย้ายออก : ' . $data['name'],
                                                 'id' => 'showModalButton',
                                                 'class' => 'btn btn-danger fa fa-arrow-left',
                                     ]);
+                                     
+                                    
+                                    
                                 }
                             }
                         ],
-                                [
+                        [
                             'attribute' => '',
                             'label' => 'ออกใบแจ้งหนี้',
                             'format' => 'raw',

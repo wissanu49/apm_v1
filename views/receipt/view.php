@@ -111,6 +111,26 @@ $this->title = 'ใบเสร็จรับเงิน';
                                     <td style="text-align: right;"><?= Yii::$app->formatter->asDecimal($model->additional_5_price) ?></td>
                                 </tr>
                                  <?php } ?>
+                                <?php
+                                if ($model->refun_1_price > 0) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $model->refun_1 ?></td>
+                                        <td style="text-align: right;">
+                                            <?= "-".Yii::$app->formatter->asDecimal($model->refun_1_price) ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                                <?php
+                                if ($model->refun_2_price > 0) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $model->refun_2 ?></td>
+                                        <td style="text-align: right;">
+                                            <?= "-".Yii::$app->formatter->asDecimal($model->refun_2_price) ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
                                 <tr>
                                     <td style="text-align: right; font-size: 16px;"><b>ราคารวม</b></td>
                                     <?php
