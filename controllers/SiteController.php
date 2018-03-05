@@ -10,28 +10,26 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class SiteController extends Controller
-{
+class SiteController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','error','logout'],
+                'only' => ['index', 'error', 'logout'],
                 'rules' => [
                     [
-                        'actions' => ['index','error','logout'],
+                        'actions' => ['index', 'error', 'logout'],
                         'allow' => true,
                         'roles' => ['@'],
-                         
                     ],
                     [
                         'actions' => ['login'],
                         'allow' => true,
-                        'roles' => ['?'],                         
+                        'roles' => ['?'],
                     ],
                 ],
             ],
@@ -47,8 +45,7 @@ class SiteController extends Controller
     /**
      * @inheritdoc
      */
-    public function actions()
-    {
+    public function actions() {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -65,9 +62,14 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        return $this->render('index');
+    public function actionIndex() {
+        $building = \app\models\Building::find()->all();
+
+        $invoice = \app\models\Invoice::find()->where(['status' => 'รอการชำระ'])->all();
+        return $this->render('index', [
+                    'building' => $building,
+                    'invoice' => $invoice,
+        ]);
     }
 
     /**
@@ -75,8 +77,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -88,7 +89,7 @@ class SiteController extends Controller
 
         //$model->password = '';
         return $this->render('login', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -97,8 +98,7 @@ class SiteController extends Controller
      *
      * @return Response
      */
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -109,8 +109,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionContact()
-    {
+    public function actionContact() {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -118,7 +117,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -127,8 +126,8 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionAbout()
-    {
+    public function actionAbout() {
         return $this->render('about');
     }
+
 }

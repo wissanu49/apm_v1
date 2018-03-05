@@ -67,7 +67,7 @@ Modal::end();
                             }
                         ],
                         //'comment',
-                        'appointment',
+                        
                         //'status',
                         [
                             'attribute' => 'status',
@@ -81,8 +81,9 @@ Modal::end();
                                 }
                             }
                         ],
+                                'appointment',
                         //'users_id',
-                        'invoice_date',
+                        //'invoice_date',
                         [
                             'attribute' => '',
                             'format' => 'raw',

@@ -3,39 +3,74 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\Models\SearchCompany */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Companies';
+$this->title = 'ข้อมูลบริษัท';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="company-index">
+<?php
+Modal::begin([
+    'headerOptions' => ['id' => 'modalHeader'],
+    'id' => 'modal',
+    'size' => 'modal-lg',
+]);
+echo "<div id='modalContent'></div>";
+Modal::end();
+?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <?php Pjax::begin(); ?>
+                <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Company', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'company_name',
-            'address',
-            'phone',
-            'logo',
-            //'electric',
-            //'water',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    <?php Pjax::end(); ?>
+                <?=
+                GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    //'filterModel' => $searchModel,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
+                        //'id',
+                        'company_name',
+                        'address',
+                        'phone',
+                        //'logo',
+                        'electric',
+                        'water',
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'visibleButtons' => [
+                                'view' => function ($model, $key, $index) {
+                                    return false;
+                                },
+                                'delete' => function ($model, $key, $index) {
+                                    return false;
+                                },
+                            ],
+                            'template' => '{update}',
+                            'buttons' => [
+                                'update' => function ($url, $model) {
+                                    return Html::button('', ['value' => Url::to(['company/update', 'id' => $model->id]),
+                                                'title' => 'ข้อมูลบริษัท',
+                                                'id' => 'showModalButton',
+                                                'class' => 'btn btn-primary fa fa-edit'
+                                    ]);
+                                },
+                            ],
+                        ],
+                    ],
+                ]);
+                ?>
+<?php Pjax::end(); ?>
+            </div>
+        </div>
+    </div>
 </div>

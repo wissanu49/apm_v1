@@ -45,9 +45,9 @@ class Company extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'company_name' => 'Company Name',
-            'address' => 'Address',
-            'phone' => 'Phone',
+            'company_name' => 'ชื่อบริษัท',
+            'address' => 'ที่อยู่',
+            'phone' => 'โทรศัพท์',
             'logo' => 'Logo',
             'electric' => 'ค่าไฟฟ้าต่อหน่วย',
             'water' => 'ค่าน้ำต่อหน่วย',

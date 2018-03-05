@@ -197,7 +197,7 @@ class LeasingController extends Controller {
             }
         }
 
-        return $this->renderAjax('update', [
+        return $this->render('_form', [
                     'model' => $model,
         ]);
     }

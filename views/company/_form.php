@@ -18,14 +18,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'logo')->textInput(['maxlength' => true]) ?>
+    <?php // $form->field($model, 'logo')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'electric')->textInput() ?>
 
     <?= $form->field($model, 'water')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success fa fa-save']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

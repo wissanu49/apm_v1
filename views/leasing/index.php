@@ -98,6 +98,7 @@ Modal::end();
                                 }
                             }
                         ],
+                                /*
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'visibleButtons' => [
@@ -110,15 +111,21 @@ Modal::end();
                             ],
                             'template' => '{update}',
                             'buttons' => [
-                                'update' => function ($url, $model) {
+                                'update' => function ($url, $data) {
+                                    
+                                    return Html::a(' ', ['leasing/checkout', 'room' => $data->rooms_id], ['class' => 'btn btn-info fa fa-edit']);
+                                    /*
                                     return Html::button('', ['value' => Url::to(['leasing/update', 'id' => $model->id]),
                                                 'title' => 'ข้อมูลสัญญาเช่า',
                                                 'id' => 'showModalButton',
                                                 'class' => 'btn btn-primary fa fa-edit'
                                     ]);
+                                     * 
+                                     
                                 },
                             ],
                         ],
+                                        */
                     ],
                 ]);
                 ?>
