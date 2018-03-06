@@ -83,12 +83,19 @@ class UsersController extends Controller
     public function actionCreate()
     {
         $model = new Users();
+        $model->scenario = 'create';
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            
+            
+            if($model->save()){
+                Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');
+                return $this->redirect(['index']);
+            }          
+            
         }
 
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
         ]);
     }
@@ -103,12 +110,39 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->scenario = 'update';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');
+            return $this->redirect(['index']);
         }
 
-        return $this->render('update', [
+        return $this->renderAjax('update', [
+            'model' => $model,
+        ]);
+    }
+    
+    public function actionChangepwd($id)
+    {
+        $model = $this->findModel($id);
+        $model->scenario = 'changepwd';
+        if ($model->load(Yii::$app->request->post())) {
+            
+            if($model->new_password != $model->repeat_password){
+                Yii::$app->session->setFlash('error', 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่');
+                return $this->redirect(['index']);
+            }else{
+                $model->password = Yii::$app->security->generatePasswordHash($model->new_password);
+            }
+            if($model->save()){
+                Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');
+                return $this->redirect(['index']);
+            }else{
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด');
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->renderAjax('changepwd', [
             'model' => $model,
         ]);
     }

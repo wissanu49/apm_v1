@@ -41,7 +41,7 @@ class SearchCustomers extends Customers
      */
     public function search($params)
     {
-        $query = Customers::find();
+        $query = Customers::find()->orderBy('id DESC');
 
         // add conditions that should always apply here
 

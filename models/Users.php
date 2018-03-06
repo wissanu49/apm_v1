@@ -39,15 +39,15 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
         return [
             [['username', 'password', 'fullname'], 'required'],
             [['role', 'status'], 'string'],
-            [['username', 'password', 'fullname'], 'string', 'max' => 100],
-            [['authKey'], 'string', 'max' => 300],
+            [['username', 'fullname'], 'string', 'max' => 100],
+            [['authKey', 'password'], 'string', 'max' => 300],
             [['password', 'new_password', 'repeat_password'], 'required', 'on' => 'changepwd'],
         ];
     }
 
      public function scenarios() {
         $sn = parent::scenarios();
-        //$sn['create'] = ['fullname', 'username', 'status', 'role'];
+        $sn['create'] = ['fullname', 'username', 'status', 'role'];
         $sn['update'] = ['fullname', 'username', 'status', 'role'];
         $sn['changepwd'] = ['new_password', 'repeat_password'];
         return $sn;
@@ -64,7 +64,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
             'role' => 'สิทธิ์การใช้งาน',
             'status' => 'สถานะ',
             'authKey' => 'authkey',
-             'new_password' => 'รหัสผ่านใหม่',
+            'new_password' => 'รหัสผ่านใหม่',
             'repeat_password' => 'ยืนยันรหัสผ่านใหม่',
         ];
     }
@@ -130,6 +130,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     public function validatePassword($password) {
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
         //return $this->password === $password;
+        
     }
     
     public static function findByUsername($username) {

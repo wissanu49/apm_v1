@@ -109,7 +109,7 @@ Modal::end();
                                         Html::button(' ประวัติ', ['value' => Url::to(['energies/histories', 'room' => $data->id]),
                                             'title' => 'รายการบันทึกทั้งหมด : ' . $data['name'],
                                             'id' => 'showModalButton',
-                                            'class' => 'btn btn-warning fa fa-flash',
+                                            'class' => 'btn btn-warning fa fa-database',
                                         ]);
                             }
                         ],

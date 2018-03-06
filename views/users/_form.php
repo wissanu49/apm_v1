@@ -18,12 +18,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'fullname')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'role')->dropDownList([ 'user' => 'User', 'admin' => 'Admin', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'role')->dropDownList([ 'user' => 'User', 'admin' => 'Admin', ], ['prompt' => 'สิทธิ์การใช้งาน']) ?>
 
-    <?= $form->field($model, 'status')->dropDownList([ 'active' => 'Active', 'suspend' => 'Suspend', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'status')->dropDownList([ 'active' => 'Active', 'suspend' => 'Suspend', ], ['prompt' => 'สถานะ']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success fa fa-save']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

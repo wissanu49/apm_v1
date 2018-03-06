@@ -87,7 +87,6 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
         <br>
         <table class="table table-borderless">
             <tr>
-                <td style="width: 15%;"></td>
                 <td style="width: 70%;">
                     <table class="table" style="width: 100%;">
                         <tr>
@@ -198,7 +197,6 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                         </tbody>
                     </table>
                 </td>
-                <td style="width: 15%;"></td>
             </tr>
         </table>
 
