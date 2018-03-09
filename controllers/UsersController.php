@@ -86,12 +86,17 @@ class UsersController extends Controller
         $model->scenario = 'create';
 
         if ($model->load(Yii::$app->request->post())) {
-            
+            $password = Yii::$app->security->generatePasswordHash($model->password);
+            $model->password = $password;
+            $model->authKey = Yii::$app->security->generateRandomKey();
             
             if($model->save()){
                 Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');
                 return $this->redirect(['index']);
-            }          
+            }else{
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด');
+                return $this->redirect(['index']);
+            }       
             
         }
 

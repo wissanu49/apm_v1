@@ -56,7 +56,7 @@ Modal::end();
                             'value' => 'customers.fullname',
                         ],
                         'leasing_date',
-                        'status',
+                        //'status',
                         //'comment:ntext',
                         [
                             'attribute' => 'status',
@@ -91,14 +91,14 @@ Modal::end();
                             'value' => function ($data) {
 
                                 //$status = \app\models\Invoice::checkInvoice($data->id);
-                                if (($status = \app\models\Invoice::checkInvoice($data->id)) == false) {
+                                if (($status = \app\models\Invoice::checkInvoice($data->id)) == false && $data->status == 'IN') {
                                     return Html::a('ออกใบแจ้งหนี้ประกันห้อง', ['invoice/deposit', 'leasing' => $data->id], ['class' => 'btn btn-info fa fa-edit']);
                                 }else{
                                     return '';
                                 }
                             }
                         ],
-                                /*
+                                
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'visibleButtons' => [
@@ -112,20 +112,17 @@ Modal::end();
                             'template' => '{update}',
                             'buttons' => [
                                 'update' => function ($url, $data) {
-                                    
-                                    return Html::a(' ', ['leasing/checkout', 'room' => $data->rooms_id], ['class' => 'btn btn-info fa fa-edit']);
-                                    /*
-                                    return Html::button('', ['value' => Url::to(['leasing/update', 'id' => $model->id]),
+                                                                        
+                                    return Html::button('', ['value' => Url::to(['leasing/update', 'id' => $data->id]),
                                                 'title' => 'ข้อมูลสัญญาเช่า',
                                                 'id' => 'showModalButton',
                                                 'class' => 'btn btn-primary fa fa-edit'
                                     ]);
-                                     * 
                                      
                                 },
                             ],
                         ],
-                                        */
+                                        
                     ],
                 ]);
                 ?>

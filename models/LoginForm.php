@@ -13,8 +13,8 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    public $username;
-    public $password;
+    //public $username;
+    //public $password;
     public $rememberMe = true;
     public $role;
     public $status;
@@ -48,7 +48,7 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-
+            die(print_r($user));
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง.');
             }

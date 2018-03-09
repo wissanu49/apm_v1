@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2018 at 05:32 PM
+-- Generation Time: Mar 09, 2018 at 02:19 PM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -57,6 +57,13 @@ CREATE TABLE `company` (
   `water` int(11) NOT NULL COMMENT 'ค่าน้ำต่อหน่วย'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ตารางค่าไฟ ค่าน้ำ';
 
+--
+-- Dumping data for table `company`
+--
+
+INSERT INTO `company` (`id`, `company_name`, `address`, `phone`, `logo`, `electric`, `water`) VALUES
+(1, 'LYMRR', 'LYMRR', '044444555', '', 9, 15);
+
 -- --------------------------------------------------------
 
 --
@@ -79,7 +86,10 @@ CREATE TABLE `customers` (
 
 INSERT INTO `customers` (`id`, `fullname`, `address`, `work_address`, `phone`, `citizen`, `gender`) VALUES
 (1, 'วิษณุ กาศไธสง', '57 หมู่ 12 เมืองปราสาท อ.โนนสูง จ.นครราชสีมา', 'เรือนโคราช', '0850970766', '1-3003-00052-35-4', 'ชาย'),
-(2, 'ลำใย ไหทองคำ', '222 ต.พล อ.พล จ.ขอนแก่น', 'xcv', '1234567890', '1-3003-00052-35-4', 'หญิง');
+(2, 'ลำใย ไหทองคำ', '222 ต.พล อ.พล จ.ขอนแก่น', 'xcv', '1234567890', '1-3003-00052-35-4', 'หญิง'),
+(3, 'สมพงษ์  ดวงดี', 'asdasd', 'asdas', '0850970766', '1-3003-00052-35-4', 'ชาย'),
+(4, 'มนต์แคน แก่นคูณ', '123 หกดหกดหกดหกดหดก', '', '1234567890', '1-3003-00052-35-4', 'ชาย'),
+(5, 'ไผ่ พงศธร', 'หกดเหดกเหกดเ', '', '0954442255', '1-3003-00052-35-4', 'ชาย');
 
 -- --------------------------------------------------------
 
@@ -89,13 +99,26 @@ INSERT INTO `customers` (`id`, `fullname`, `address`, `work_address`, `phone`, `
 
 CREATE TABLE `energies` (
   `id` int(11) NOT NULL,
-  `peroid` varchar(45) NOT NULL COMMENT 'รอบเดือน',
+  `peroid` date NOT NULL COMMENT 'รอบเดือน',
   `water_unit` int(11) NOT NULL COMMENT 'เลขมิเตอร์น้ำ',
   `electric_unit` int(11) NOT NULL COMMENT 'เลขมิเตอร์ไฟฟ้า',
-  `rooms_id` int(11) NOT NULL,
+  `rooms_id` int(11) NOT NULL COMMENT 'ห้อง',
   `users_id` int(11) NOT NULL COMMENT 'ผู้จดบันทึก',
   `record_date` datetime NOT NULL COMMENT 'วันที่บันทึก'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='บันทึกหน่วยไฟฟ้าน้ำปะปา';
+
+--
+-- Dumping data for table `energies`
+--
+
+INSERT INTO `energies` (`id`, `peroid`, `water_unit`, `electric_unit`, `rooms_id`, `users_id`, `record_date`) VALUES
+(7, '2018-02-01', 15, 201, 2, 2, '2018-03-01 09:33:43'),
+(8, '2018-03-01', 25, 225, 2, 2, '2018-03-01 11:26:41'),
+(9, '2018-02-01', 10, 150, 1, 2, '2018-03-01 19:04:38'),
+(10, '2018-03-01', 32, 263, 1, 2, '2018-03-01 19:38:14'),
+(11, '2018-02-01', 15, 150, 3, 2, '2018-03-01 19:38:55'),
+(12, '2018-01-01', 1, 120, 1, 2, '2018-03-02 21:13:24'),
+(13, '2018-02-01', 22, 123, 8, 2, '2018-03-06 20:33:29');
 
 -- --------------------------------------------------------
 
@@ -129,6 +152,7 @@ CREATE TABLE `expenses` (
 CREATE TABLE `invoice` (
   `id` varchar(25) NOT NULL,
   `leasing_id` varchar(25) NOT NULL COMMENT 'เลขที่สัญญา',
+  `rooms_id` int(11) NOT NULL COMMENT 'ห้องพัก',
   `deposit` int(11) DEFAULT NULL COMMENT 'ค่าประกันห้อง',
   `rental` int(11) NOT NULL COMMENT 'ค่าห้อง',
   `electric_unit_from` int(11) NOT NULL COMMENT 'หน่วยไฟฟ้าครั้งก่อน',
@@ -163,9 +187,16 @@ CREATE TABLE `invoice` (
 -- Dumping data for table `invoice`
 --
 
-INSERT INTO `invoice` (`id`, `leasing_id`, `deposit`, `rental`, `electric_unit_from`, `electric_unit_to`, `electric_price`, `water_unit_from`, `water_unit_to`, `water_price`, `additional_1`, `additional_1_price`, `additional_2`, `additional_2_price`, `additional_3`, `additional_3_price`, `additional_4`, `additional_4_price`, `additional_5`, `additional_5_price`, `refun_1`, `refun_1_price`, `refun_2`, `refun_2_price`, `total`, `comment`, `appointment`, `status`, `users_id`, `invoice_date`) VALUES
-('IN1802001', 'LE1802001', 1500, 2500, 0, 0, 0, 0, 0, 0, 'ค่าโทรศัพท์', 350, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 4350, '', '2018-02-26', 'ชำระแล้ว', 2, '2018-02-25 22:41:35'),
-('IN1802002', 'LE1802002', 1000, 1500, 0, 0, 0, 0, 0, 0, 'ค่า Cable TV', 250, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 2750, '', '2018-03-01', 'ชำระแล้ว', 2, '2018-02-27 21:11:26');
+INSERT INTO `invoice` (`id`, `leasing_id`, `rooms_id`, `deposit`, `rental`, `electric_unit_from`, `electric_unit_to`, `electric_price`, `water_unit_from`, `water_unit_to`, `water_price`, `additional_1`, `additional_1_price`, `additional_2`, `additional_2_price`, `additional_3`, `additional_3_price`, `additional_4`, `additional_4_price`, `additional_5`, `additional_5_price`, `refun_1`, `refun_1_price`, `refun_2`, `refun_2_price`, `total`, `comment`, `appointment`, `status`, `users_id`, `invoice_date`) VALUES
+('IN1802001', 'LE1802001', 1, 1500, 2500, 0, 0, 0, 0, 0, 0, 'ค่าโทรศัพท์', 350, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 4350, '', '2018-02-26', 'ชำระแล้ว', 2, '2018-02-25 22:41:35'),
+('IN1802002', 'LE1802002', 2, 1000, 1500, 0, 0, 0, 0, 0, 0, 'ค่า Cable TV', 250, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 2750, '', '2018-03-01', 'ชำระแล้ว', 2, '2018-02-27 21:11:26'),
+('IN1803001', 'LE1802001', 1, NULL, 2500, 150, 263, 904, 10, 32, 330, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3734, NULL, '2018-03-05', 'ชำระแล้ว', 2, '2018-03-02 22:52:39'),
+('IN1803002', 'LE1802002', 2, NULL, 1500, 201, 225, 192, 15, 25, 150, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1842, NULL, '2018-03-05', 'ชำระแล้ว', 2, '2018-03-02 23:02:40'),
+('IN1803005', 'LE1802002', 2, NULL, 1500, 201, 225, 216, 15, 25, 150, 'ค่าทำความสะอาด', 200, '', NULL, '', NULL, '', NULL, '', NULL, 'ค่าประกันห้อง', 1000, '', NULL, 1066, '', '2018-03-31', 'ชำระแล้ว', 2, '2018-03-04 21:45:13'),
+('IN1803006', 'LE1802001', 1, NULL, 2500, 150, 263, 1017, 10, 32, 330, 'ค่าทำความสะอาด', 200, '', NULL, '', NULL, '', NULL, '', NULL, 'คืนค่าประกันห้อง', 1500, '', NULL, 2547, '', '2018-03-31', 'ชำระแล้ว', 2, '2018-03-04 22:34:59'),
+('IN1803008', 'LE1803002', 8, 1000, 1500, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2500, NULL, '2018-03-10', 'ชำระแล้ว', 2, '0000-00-00 00:00:00'),
+('IN1803009', 'LE1803003', 6, 1500, 2500, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4000, NULL, '2018-03-10', 'รอการชำระ', 2, '0000-00-00 00:00:00'),
+('IN1803010', 'LE1803004', 4, 1000, 1500, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2500, NULL, '2018-03-07', 'รอการชำระ', 2, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -192,8 +223,12 @@ CREATE TABLE `leasing` (
 --
 
 INSERT INTO `leasing` (`id`, `leasing_code`, `move_in`, `move_out`, `users_id`, `rooms_id`, `customers_id`, `leasing_date`, `status`, `comment`, `deposit`) VALUES
-('LE1802001', NULL, '2018-03-01', NULL, 2, 1, 1, '2018-02-25 21:41:52', 'IN', NULL, 1500),
-('LE1802002', NULL, '2018-03-01', NULL, 2, 2, 2, '2018-02-25 23:27:04', 'IN', NULL, 1000);
+('LE1802001', NULL, '2018-03-01', '2018-03-31', 2, 1, 1, '2018-02-25 21:41:52', 'OUT', '', 1500),
+('LE1802002', NULL, '2018-03-01', '2018-03-31', 2, 2, 2, '2018-02-25 23:27:04', 'OUT', 'dfgdfgfd', 1000),
+('LE1803001', NULL, '2018-03-31', NULL, 2, 3, 1, '2018-03-04 22:50:52', 'CANCEL', '', 1000),
+('LE1803002', NULL, '2018-03-05', NULL, 2, 8, 4, '2018-03-06 20:36:50', 'IN', NULL, 1000),
+('LE1803003', NULL, '2018-03-05', NULL, 2, 6, 5, '2018-03-06 20:53:33', 'IN', NULL, 1500),
+('LE1803004', NULL, '2018-03-06', NULL, 2, 4, 1, '2018-03-07 20:51:56', 'IN', NULL, 1000);
 
 -- --------------------------------------------------------
 
@@ -236,7 +271,12 @@ CREATE TABLE `receipt` (
 
 INSERT INTO `receipt` (`id`, `leasing_id`, `rental`, `deposit`, `electric_price`, `water_price`, `additional_1`, `additional_1_price`, `additional_2`, `additional_2_price`, `additional_3`, `additional_3_price`, `additional_4`, `additional_4_price`, `additional_5`, `additional_5_price`, `refun_1`, `refun_1_price`, `refun_2`, `refun_2_price`, `total`, `comment`, `invoice_id`, `users_id`, `receipt_date`, `status`) VALUES
 ('RE1802001', 'LE1802001', 2500, 1500, 0, 0, 'ค่าโทรศัพท์', 350, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 4350, '', 'IN1802001', 2, '2018-02-27 21:07:21', 'normal'),
-('RE1802002', 'LE1802002', 1500, 1000, 0, 0, 'ค่า Cable TV', 250, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 2750, '', 'IN1802002', 2, '2018-02-27 21:12:09', 'normal');
+('RE1803001', 'LE1802002', 1500, 1000, 0, 0, 'ค่า Cable TV', 250, 'ค่าปรับ', 500, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 3250, '', 'IN1802002', 2, '2018-03-02 20:11:35', 'normal'),
+('RE1803002', 'LE1802001', 2500, 0, 904, 330, '', NULL, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 3734, '', 'IN1803001', 2, '2018-03-04 22:21:59', 'normal'),
+('RE1803003', 'LE1802002', 1500, 0, 192, 150, '', NULL, '', NULL, '', NULL, '', NULL, '', NULL, NULL, NULL, NULL, NULL, 1842, '', 'IN1803002', 2, '2018-03-04 22:24:19', 'normal'),
+('RE1803004', 'LE1802002', 1500, 0, 216, 150, 'ค่าทำความสะอาด', 200, '', NULL, '', NULL, '', NULL, '', NULL, 'ค่าประกันห้อง', 1000, '', NULL, 1066, '', 'IN1803005', 2, '2018-03-04 22:27:53', 'normal'),
+('RE1803005', 'LE1802001', 2500, 0, 1017, 330, 'ค่าทำความสะอาด', 200, '', NULL, '', NULL, '', NULL, '', NULL, 'คืนค่าประกันห้อง', 1500, '', NULL, 2547, '', 'IN1803006', 2, '2018-03-04 22:36:20', 'normal'),
+('RE1803006', 'LE1803002', 1500, 1000, 0, 0, '', NULL, '', NULL, '', NULL, '', NULL, '', NULL, '', NULL, '', NULL, 2500, '', 'IN1803008', 2, '2018-03-06 20:39:06', 'normal');
 
 -- --------------------------------------------------------
 
@@ -251,18 +291,24 @@ CREATE TABLE `rooms` (
   `deposit` int(11) DEFAULT NULL COMMENT 'ค่าประกันห้อง',
   `details` text COMMENT 'รายละเอียดห้อง',
   `type` enum('ห้องแอร์','ห้องพัดลม') NOT NULL DEFAULT 'ห้องพัดลม' COMMENT 'ประเภทห้อง',
-  `daily_price` varchar(45) DEFAULT NULL COMMENT 'ราคารายวัน',
-  `building_id` int(11) NOT NULL
+  `daily_price` int(11) DEFAULT NULL COMMENT 'ราคารายวัน',
+  `building_id` int(11) NOT NULL COMMENT 'ตึก/อาคาร',
+  `status` enum('ว่าง','ไม่ว่าง') NOT NULL DEFAULT 'ว่าง' COMMENT 'สถานะ'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ห้องพัก';
 
 --
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `name`, `monthly_price`, `deposit`, `details`, `type`, `daily_price`, `building_id`) VALUES
-(1, '201', 2500, 1500, '', 'ห้องแอร์', '650', 1),
-(2, '202', 1500, 1000, '', 'ห้องพัดลม', '', 1),
-(3, '203', 1500, 1000, '', 'ห้องพัดลม', NULL, 1);
+INSERT INTO `rooms` (`id`, `name`, `monthly_price`, `deposit`, `details`, `type`, `daily_price`, `building_id`, `status`) VALUES
+(1, '201', 2500, 1500, '', 'ห้องแอร์', 650, 1, 'ว่าง'),
+(2, '202', 1500, 1000, '', 'ห้องพัดลม', 0, 1, 'ว่าง'),
+(3, '203', 1500, 1000, '', 'ห้องพัดลม', NULL, 1, 'ว่าง'),
+(4, '204', 1500, 1000, '', 'ห้องพัดลม', NULL, 1, 'ไม่ว่าง'),
+(5, '205', 2500, 1500, '', 'ห้องแอร์', NULL, 1, 'ว่าง'),
+(6, '206', 2500, 1500, '', 'ห้องแอร์', NULL, 1, 'ไม่ว่าง'),
+(7, '207', 2500, 1500, '', 'ห้องแอร์', NULL, 1, 'ว่าง'),
+(8, '208', 1500, 1000, '', 'ห้องพัดลม', NULL, 1, 'ไม่ว่าง');
 
 -- --------------------------------------------------------
 
@@ -273,7 +319,7 @@ INSERT INTO `rooms` (`id`, `name`, `monthly_price`, `deposit`, `details`, `type`
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(100) NOT NULL COMMENT 'ชื่อผู้ใช้งาน',
-  `password` varchar(100) NOT NULL COMMENT 'รหัสผ่าน',
+  `password` varchar(300) NOT NULL COMMENT 'รหัสผ่าน',
   `fullname` varchar(100) NOT NULL COMMENT 'ชื่อ-นามสกุล',
   `role` enum('user','admin') NOT NULL DEFAULT 'user' COMMENT 'สิทธิ์การใช้งาน',
   `status` enum('active','suspend') NOT NULL DEFAULT 'active' COMMENT 'สถานะ',
@@ -285,7 +331,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `fullname`, `role`, `status`, `authKey`) VALUES
-(2, 'admin', '$2y$13$8GJPEKlpaCm/n01TCYs51e5V4BJO3KEIf.KrKn.E2l95KyfopOeVC', 'administrator', 'admin', 'active', 'FG8ssmgy94xZd1MeOYj_g3fezL0c8ZHO');
+(2, 'admin', '$2y$13$8GJPEKlpaCm/n01TCYs51e5V4BJO3KEIf.KrKn.E2l95KyfopOeVC', 'administrator', 'admin', 'active', 'FG8ssmgy94xZd1MeOYj_g3fezL0c8ZHO'),
+(4, 'user1', '$2y$13$yWPY4uTZzKFzfWqq8MfJQeaOJquzqGeSCGYVuv.Z4QMeYag6mnuum', 'วิษณุ กาศไธสง', 'user', 'active', 'MRFob-YJtxZCV1qnT_-f26bWowLXhMNE'),
+(5, 'user2', '$2y$13$ZCipx0NP5VyxxUhlLXIn4OfMdmvO.83CuFhbl5yVLW70JY9TcLwsK', 'user2', 'user', 'active', '-I-k1CznKH-WNNnskI5mubSwxPzwZgQj'),
+(6, 'user3', '$2y$13$D6pBtWYfM6NIEIlwkbp.DOMBiabeDoaO.Y5nAS47LqDCMotM862MG', 'user3', 'user', 'active', '2Trwr53BIXd6j-tDz8lwVZymFcs_r72C'),
+(9, 'user4', '$2y$13$ewSC1Nko2efo0NhTXqCRKuUAxDT4hS9ZAbPvSuhhB1azBqforR7zG', 'user4', 'admin', 'active', '9m???E?О	?Q??.V	??Ft)??æ???7T');
 
 --
 -- Indexes for dumped tables
@@ -377,17 +427,17 @@ ALTER TABLE `building`
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `energies`
 --
 ALTER TABLE `energies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `expenses`
 --
@@ -397,12 +447,12 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสห้อง', AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสห้อง', AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- Constraints for dumped tables
 --

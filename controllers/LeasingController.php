@@ -181,11 +181,25 @@ class LeasingController extends Controller {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
+
+            $transection = Yii::$app->db->beginTransaction();
+            $roomsModel = \app\models\Rooms::findOne($model->rooms_id);
+
             try {
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
-                    $transection->commit();
-                    return $this->redirect(['index']);
+
+                    if ($model->status == 'CANCEL') {
+                        $roomsModel->status = 'ว่าง';
+                    }
+                    if ($roomsModel->update()) {
+                        Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                        $transection->commit();
+                        return $this->redirect(['index']);
+                    } else {
+                        Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                        $transection->rollBack();
+                        return $this->redirect(['index']);
+                    }
                 } else {
                     Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
                     $transection->rollBack();
@@ -197,7 +211,7 @@ class LeasingController extends Controller {
             }
         }
 
-        return $this->render('_form', [
+        return $this->renderAjax('_form', [
                     'model' => $model,
         ]);
     }

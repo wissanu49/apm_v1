@@ -137,11 +137,12 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
         return self::findOne(['username' => $username, 'status' => 'active']);
     }
     
+    /*
     public function beforeSave($insert) {
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) { // <---- the difference
-                $this->authKey = Yii::$app->getSecurity()->generateRandomString();
-                $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+                //$this->authKey = Yii::$app->security->generateRandomString();
+                //$this->password = Yii::$app->security->generatePasswordHash($this->password);
             } //else {
                 //$this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
                 //$this->authKey = Yii::$app->getSecurity()->generateRandomString();
@@ -151,6 +152,8 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
         return false;
     }
     
+     * 
+     */
     public function getRole() {
         $profile = Users::find()->where(['id' => $this->id])->one();
         if ($profile !== null) {

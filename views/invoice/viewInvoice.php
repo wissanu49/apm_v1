@@ -180,7 +180,7 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                     <tr>
                                         <td><?= $r1 ?></td>
                                         <td style="text-align: right;">
-                                            <?= "-".Yii::$app->formatter->asDecimal($re1) ?>
+                                            <?= "-" . Yii::$app->formatter->asDecimal($re1) ?>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -190,7 +190,7 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                     <tr>
                                         <td><?= $r2 ?></td>
                                         <td style="text-align: right;">
-                                            <?= "-".Yii::$app->formatter->asDecimal($re2) ?>
+                                            <?= "-" . Yii::$app->formatter->asDecimal($re2) ?>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -211,6 +211,16 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                         <p style="text-align: center;">
                             <?php
                             if ($status === 'รอการชำระ') {
+                                echo Html::a(' ยกเลิกใบแจ้งหนี้', ['invoice/delete', 'id' => $inv_id], [
+                                    'class' => 'btn btn-danger fa fa-trash',
+                                    'data' => [
+                                        'confirm' => "คุณต้องการยกเลิก ใบแจ้งหนี้ : ".$inv_id." ใช่หรือไม่ ?",
+                                        'method' => 'post',
+                                    ]]
+                                );
+                                ?>
+                                &nbsp;
+                                <?php
                                 echo Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
                                 ?>
                                 &nbsp;
