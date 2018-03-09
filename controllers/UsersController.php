@@ -86,9 +86,9 @@ class UsersController extends Controller
         $model->scenario = 'create';
 
         if ($model->load(Yii::$app->request->post())) {
-            $password = Yii::$app->security->generatePasswordHash($model->password);
-            $model->password = $password;
-            $model->authKey = Yii::$app->security->generateRandomKey();
+            //$password = Yii::$app->security->generatePasswordHash($model->password);
+            //$model->password = $password;
+            //$model->authKey = Yii::$app->security->generateRandomKey();
             
             if($model->save()){
                 Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');
@@ -136,7 +136,7 @@ class UsersController extends Controller
                 Yii::$app->session->setFlash('error', 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่');
                 return $this->redirect(['index']);
             }else{
-                $model->password = Yii::$app->security->generatePasswordHash($model->new_password);
+                $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->new_password);
             }
             if($model->save()){
                 Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');

@@ -23,6 +23,7 @@ use Yii;
 class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
 
     //private static $users;
+    //public $password;
     public $new_password;
     public $repeat_password;
     /**
@@ -47,7 +48,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
 
      public function scenarios() {
         $sn = parent::scenarios();
-        $sn['create'] = ['fullname', 'username', 'status', 'role'];
+        $sn['create'] = ['fullname', 'username', 'password', 'status', 'role'];
         $sn['update'] = ['fullname', 'username', 'status', 'role'];
         $sn['changepwd'] = ['new_password', 'repeat_password'];
         return $sn;
@@ -128,6 +129,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     }
     
     public function validatePassword($password) {
+        //$hash = Yii::$app->getSecurity()->generatePasswordHash($this->password);
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
         //return $this->password === $password;
         
@@ -137,13 +139,14 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
         return self::findOne(['username' => $username, 'status' => 'active']);
     }
     
-    /*
+    
     public function beforeSave($insert) {
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) { // <---- the difference
-                //$this->authKey = Yii::$app->security->generateRandomString();
-                //$this->password = Yii::$app->security->generatePasswordHash($this->password);
-            } //else {
+                $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+                $this->authKey = Yii::$app->getSecurity()->generateRandomString();
+                
+            }// else {
                 //$this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
                 //$this->authKey = Yii::$app->getSecurity()->generateRandomString();
             //}
@@ -152,8 +155,6 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
         return false;
     }
     
-     * 
-     */
     public function getRole() {
         $profile = Users::find()->where(['id' => $this->id])->one();
         if ($profile !== null) {
