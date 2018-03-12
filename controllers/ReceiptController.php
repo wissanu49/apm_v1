@@ -188,8 +188,8 @@ class ReceiptController extends Controller {
             // set to use core fonts only
             'mode' => Pdf::MODE_UTF8, //
             // A4 paper format
-            'format' => Pdf::FORMAT_A4,
-            //'format' => [210,148.5],
+            //'format' => Pdf::FORMAT_A4,
+            'format' => [210,148.5],
             'marginLeft' => 10,
             'marginRight' => 10,
             'marginTop' => 2,

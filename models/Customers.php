@@ -33,7 +33,7 @@ class Customers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fullname', 'address', 'phone', 'citizen'], 'required'],
+            [['fullname', 'address','gender'], 'required'],
             [['address', 'work_address', 'gender'], 'string'],
             [['fullname', 'phone', 'citizen'], 'string', 'max' => 45],
             [['citizen'], 'validateIdCard'],

@@ -31,6 +31,7 @@ foreach ($config as $cfg){
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                
                 <?php $form = ActiveForm::begin(); ?>
                 <!-- Table row -->
                 <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
@@ -97,9 +98,11 @@ foreach ($config as $cfg){
                                                 <td style="width: 10%; text-align: center;"> - </td>
                                                 <td>
                                                     <?=
-                                                    $form->field($model, 'electric_unit_from')->dropDownList(ArrayHelper::map(app\models\Energies::getElectric($room), 'electric_unit', function ($data) {
+                                                    $form->field($model, 'electric_unit_from')->dropDownList(ArrayHelper::map(array_reverse(app\models\Energies::getElectric($room)), 
+                                                            'electric_unit', 
+                                                            function ($data) {
                                                                 return Yii::$app->formatter->asDate($data['peroid']) . ' [' . $data['electric_unit'] . ']';
-                                                            }), ['prompt' => ' หน่วยครั้งก่อน '])->label(false)
+                                                            }))->label(false)
                                                     ?>
                                                 </td>
                                                 <td style="width: 20%;">
@@ -138,9 +141,9 @@ foreach ($config as $cfg){
                                                 <td style="width: 10%; text-align: center;"> - </td>
                                                 <td>
                                                     <?=
-                                                    $form->field($model, 'water_unit_from')->dropDownList(ArrayHelper::map(app\models\Energies::getWater($room), 'water_unit', function ($model) {
+                                                    $form->field($model, 'water_unit_from')->dropDownList(ArrayHelper::map(array_reverse(app\models\Energies::getWater($room)), 'water_unit', function ($model) {
                                                                 return Yii::$app->formatter->asDate($model['peroid']) . ' [' . $model['water_unit'] . ']';
-                                                            }), ['prompt' => ' หน่วยครั้งก่อน '])->label(false)
+                                                            }))->label(false)
                                                     ?>
                                                 </td>  
                                                 <td style="width: 20%;">
@@ -231,6 +234,8 @@ foreach ($config as $cfg){
             $this->RegisterJs("
     $('document').ready(function(){
           
+        WaterCal();
+         ElectricCal();
         $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();
         });
@@ -259,7 +264,7 @@ foreach ($config as $cfg){
         $('#" . Html::getInputId($model, 'electric_unit_to') . "').change(function(e){ 
            ElectricCal();
         });
-        
+         
         function WaterCal(){
             var unit_from;
             var unit_to;

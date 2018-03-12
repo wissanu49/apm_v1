@@ -99,7 +99,7 @@ class LeasingController extends Controller {
             $transection = Yii::$app->db->beginTransaction();
             $model->leasing_date = date('Y-m-d H:i:s');
             $model->users_id = Yii::$app->user->identity->id;
-
+            $model->id = self::RunningCodes($this->FIELD_NAME, $this->TABLE_NAME, $this->KEY_RUN);
             $roomsModel = \app\models\Rooms::findOne($model->rooms_id);
             try {
                 if ($model->save()) {
@@ -108,7 +108,7 @@ class LeasingController extends Controller {
                     $roomsModel->status = 'ไม่ว่าง';
                     if ($roomsModel->update()) {
                         $transection->commit();
-                        return $this->redirect(['rooms/index']);
+                        return $this->redirect(['invoice/deposit','leasing'=>$model->id]);
                     }
                 } else {
                     Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');

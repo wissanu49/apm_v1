@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td><?= $data['peroid'] ?></td>
+                                <td><?= Yii::$app->formatter->asDate($data['peroid']) ?></td>
                                 <td><?= $data['electric_unit'] ?></td>
                                 <td><?= $data['water_unit'] ?></td>
                                 <td><?= Html::a(' แก้ไข', ['energies/update', 'id' => $data->id],[

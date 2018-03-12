@@ -76,6 +76,8 @@ class EnergiesController extends Controller {
         $model->scenario = 'add_data';
         $model->rooms_id = $room;
         $model->users_id = Yii::$app->user->identity->id;
+
+        $dataProvider = Energies::find()->where(['rooms_id' => $room])->orderBy('peroid DESC')->limit(5)->all();
         if ($model->load(Yii::$app->request->post())) {
             $transection = \Yii::$app->db->beginTransaction();
             try {
@@ -94,20 +96,21 @@ class EnergiesController extends Controller {
 
         return $this->renderAjax('create', [
                     'model' => $model,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
     public function actionHistories($room) {
-        
-        $dataProvider = Energies::find()->where(['rooms_id' => $room])->orderBy('id DESC')->all();
+
+        $dataProvider = Energies::find()->where(['rooms_id' => $room])->orderBy('peroid DESC')->limit(12)->all();
         $rooms = \app\models\Rooms::find()->select('name')->where(['id' => $room])->one();
         //die(print_r($dataProvider));
         return $this->renderAjax('histories', [
                     'dataProvider' => $dataProvider,
-            'roomname' => $rooms->name,
+                    'roomname' => $rooms->name,
         ]);
-        
-         //return $this->renderAjax('histories');
+
+        //return $this->renderAjax('histories');
     }
 
     /**
@@ -121,11 +124,11 @@ class EnergiesController extends Controller {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            
-            if($model->save()){
+
+            if ($model->save()) {
                 return $this->redirect(['rooms/index']);
             }
-            
+
             //return $this->goBack();
         }
 

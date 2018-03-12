@@ -184,6 +184,26 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                     </td>
                                 </tr>
                             <?php } ?>
+                                <?php
+                            if ($re1 > 0) {
+                                ?>
+                                <tr>
+                                    <td><?= $r1 ?></td>
+                                    <td style="text-align: right;">
+                                        <?= "- ".Yii::$app->formatter->asDecimal($re1) ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            <?php
+                            if ($re2 > 0) {
+                                ?>
+                                <tr>
+                                    <td><?= $r2 ?></td>
+                                    <td style="text-align: right;">
+                                        <?= " -".Yii::$app->formatter->asDecimal($re2) ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
                             <tr>
                                 <td style="text-align: right;"><b><?= $NumToString->Convert($total) ?></b></td>
                                 <td style="text-align: right; font-size: 12px;"><b><?= Yii::$app->formatter->asDecimal($total); ?></b></td>
