@@ -13,13 +13,12 @@ use yii\filters\AccessControl;
 /**
  * ExpensesController implements the CRUD actions for Expenses model.
  */
-class ExpensesController extends Controller
-{
+class ExpensesController extends Controller {
+
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -45,14 +44,13 @@ class ExpensesController extends Controller
      * Lists all Expenses models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $searchModel = new SearchExpenses();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -62,10 +60,9 @@ class ExpensesController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+    public function actionView($id) {
+        return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -74,16 +71,29 @@ class ExpensesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new Expenses();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $transection = Yii::$app->db->beginTransaction();
+            try {
+                if ($model->save()) {
+                    $transection->commit();
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                    return $this->redirect(['index']);
+                }else{
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                    return $this->redirect(['index']);
+                }
+            } catch (Exception $ex) {
+                Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด.'.$ex);
+                return $this->redirect(['index']);
+            }
         }
 
-        return $this->render('create', [
-            'model' => $model,
+        return $this->renderAjax('create', [
+                    'model' => $model,
         ]);
     }
 
@@ -94,16 +104,15 @@ class ExpensesController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
+        return $this->renderAjax('update', [
+                    'model' => $model,
         ]);
     }
 
@@ -114,8 +123,7 @@ class ExpensesController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -128,12 +136,12 @@ class ExpensesController extends Controller
      * @return Expenses the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Expenses::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
 }

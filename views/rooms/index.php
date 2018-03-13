@@ -120,9 +120,9 @@ Modal::end();
                             'value' => function($data) {
                                 $status = \app\models\Leasing::checkRooms($data->id);
                                 if ($status == true) {
-                                    return Html::button(' ทำสัญญาเช่า', ['value' => Url::to(['leasing/checkin', 'room' => $data->id]),
+                                    return Html::a(' ทำสัญญาเช่า', ['leasing/checkin', 'room' => $data->id],[
                                                 'title' => 'ทำสัญญาเช่า : ' . $data['name'],
-                                                'id' => 'showModalButton',
+                                                //'id' => 'showModalButton',
                                                 'class' => 'btn btn-success fa fa-arrow-right',
                                     ]);
                                 }else{

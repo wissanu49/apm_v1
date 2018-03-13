@@ -40,6 +40,7 @@
                          * 
                          */
                         ['label' => 'ใบแจ้งหนี้','icon' => 'file', 'url' => ['/invoice']],
+                        ['label' => 'ค่าใช้จ่าย','icon' => 'money', 'url' => ['/expenses']],
                         ['label' => 'ใบเสร็จรับเงิน','icon' => 'money', 'url' => ['/receipt']],
                         ['label' => 'ตั้งค่าระบบ','icon' => 'gear', 'url' => ['/company']],
                         ['label' => 'ผู้ใช้งาน','icon' => 'user', 'url' => ['/users']],

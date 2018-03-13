@@ -40,8 +40,9 @@ class Expenses extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['expenses_1', 'expenses_1_price', 'users_id'], 'required'],
-            [['expenses_1_price', 'expenses_2_price', 'expenses_3_price', 'expenses_4_price', 'expenses_5_price', 'total', 'users_id'], 'integer'],
+            [['expenses_1', 'expenses_1_price', 'total', 'users_id'], 'required'],
+            [['users_id'], 'integer'],
+            [['expenses_1_price', 'expenses_2_price', 'expenses_3_price', 'expenses_4_price', 'expenses_5_price', 'total'], 'double'],
             [['date_record'], 'safe'],
             [['expenses_1', 'expenses_2', 'expenses_3', 'expenses_4', 'expenses_5'], 'string', 'max' => 200],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
@@ -56,18 +57,18 @@ class Expenses extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'expenses_1' => 'ค่าใช้จ่าย',
-            'expenses_1_price' => 'Expenses 1 Price',
+            'expenses_1_price' => 'จำนวนเงิน',
             'expenses_2' => 'ค่าใช้จ่าย',
-            'expenses_2_price' => 'Expenses 2 Price',
+            'expenses_2_price' => 'จำนวนเงิน',
             'expenses_3' => 'ค่าใช้จ่าย',
-            'expenses_3_price' => 'Expenses 3 Price',
+            'expenses_3_price' => 'จำนวนเงิน',
             'expenses_4' => 'ค่าใช้จ่าย',
-            'expenses_4_price' => 'Expenses 4 Price',
+            'expenses_4_price' => 'จำนวนเงิน',
             'expenses_5' => 'ค่าใช้จ่าย',
-            'expenses_5_price' => 'Expenses 5 Price',
+            'expenses_5_price' => 'จำนวนเงิน',
             'total' => 'รวมค่าใช้จ่าย',
             'date_record' => 'วันที่บึนทึก',
-            'users_id' => 'Users ID',
+            'users_id' => 'ผู้บันทึก',
         ];
     }
 

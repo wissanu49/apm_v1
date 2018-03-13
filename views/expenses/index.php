@@ -3,46 +3,113 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
+use yii\helpers\Url;
+use kartik\dialog\Dialog;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\Models\SearchExpenses */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Expenses';
+$this->title = 'รายการค่าใช้จ่าย';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="expenses-index">
+<?php
+Modal::begin([
+    'headerOptions' => ['id' => 'modalHeader'],
+    'id' => 'modal',
+    'size' => 'modal-lg',
+]);
+echo "<div id='modalContent'></div>";
+Modal::end();
+?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+<?php Pjax::begin(); ?>
+                    <?php // echo $this->render('_search', ['model' => $searchModel]);   ?>
 
-    <p>
-        <?= Html::a('Create Expenses', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+                <p style="text-align: right;">
+                    <?=
+                    Html::button(' บันทึกค่าใช้จ่าย ', ['value' => Url::to(['expenses/create']),
+                        'title' => 'บันทึกค่าใช้จ่าย',
+                        'id' => 'showModalButton',
+                        'class' => 'btn btn-success fa fa-plus'
+                    ]);
+                    ?>
+                </p>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+                <?=
+                GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
+                        //'id',
+                        //'date_record',
+                        [
+                            'attribute' => 'date_record',
+                            'value' => function($data) {
+                                return Yii::$app->formatter->asDate($data['date_record']);
+                            }
+                        ],
+                        //'expenses_1',
+                        //'expenses_1_price',
+                        //'expenses_2',
+                        //'expenses_2_price',
+                        //'expenses_3',
+                        //'expenses_3_price',
+                        //'expenses_4',
+                        //'expenses_4_price',
+                        //'expenses_5',
+                        //'expenses_5_price',
+                        //'total',
+                        [
+                            'attribute' => 'total',
+                            'value' => function($data) {
+                                return Yii::$app->formatter->asDecimal($data['total']);
+                            }
+                        ],
+                        //'date_record',
+                        //'users_id',
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'visibleButtons' => [
+                                'view' => function ($model, $key, $index) {
+                                    return false;
+                                },
+                            ],
+                            'template' => ' {delete} {update}',
+                            'buttons' => [
+                                'update' => function ($url, $data) {
 
-            'id',
-            'expenses_1',
-            'expenses_1_price',
-            'expenses_2',
-            'expenses_2_price',
-            //'expenses_3',
-            //'expenses_3_price',
-            //'expenses_4',
-            //'expenses_4_price',
-            //'expenses_5',
-            //'expenses_5_price',
-            //'total',
-            //'date_record',
-            //'users_id',
+                                    return Html::button(' แก้ไข', ['value' => Url::to(['expenses/update', 'id' => $data->id]),
+                                                'title' => 'แก้ไขรายการ',
+                                                'id' => 'showModalButton',
+                                                'class' => 'btn btn-primary fa fa-edit'
+                                    ]);
+                                },
+                                'delete' => function ($url, $data) {
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    <?php Pjax::end(); ?>
+                                    return Html::button(' ยกเลิก', [ 'value' => Url::to(['expenses/delete', 'id' => $data->id]),
+                                                'title' => 'ลบรายการ',
+                                                'id' => 'btn-confirm',
+                                                'class' => 'btn btn-danger fa fa-trash'
+                                    ]);
+                                },
+                            ],
+                        ],
+                    ],
+                ]);
+                ?>
+                <?php Pjax::end(); ?>
+               
+            </div>
+        </div>
+    </div>
 </div>

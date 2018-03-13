@@ -230,7 +230,6 @@ foreach ($config as $cfg){
 
             </div>
             <?php
-            $a = 10;
             $this->RegisterJs("
     $('document').ready(function(){
           
