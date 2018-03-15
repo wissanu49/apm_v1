@@ -222,6 +222,7 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                 &nbsp;
                                 <?php
                                 echo Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
+                                
                                 ?>
                                 &nbsp;
                                 <?php

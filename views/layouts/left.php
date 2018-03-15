@@ -35,6 +35,7 @@
                             'items' => [
                                 ['label' => 'ค่าใช้จ่าย', 'icon' => 'money', 'url' => ['/expenses'],],
                                 ['label' => 'สรุปรายรับ-รายจ่าย', 'icon' => 'database', 'url' => ['/site/report'],],
+                                ['label' => 'สรุปรายรับตามประเภท', 'icon' => 'database', 'url' => ['/site/energies'],],
                             ],
                         ],
                         ['label' => 'ใบแจ้งหนี้','icon' => 'file', 'url' => ['/invoice']],

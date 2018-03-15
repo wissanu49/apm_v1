@@ -19,6 +19,16 @@ Modal::begin([
     'headerOptions' => ['id' => 'modalHeader'],
     'id' => 'modal',
     'size' => 'modal-lg',
+    'closeButton' => [
+        'id'=>'close-button',
+        'class' => 'btn btn-danger btn-sm pull-right',
+        'label' => 'Close',
+        ],
+    //keeps from closing modal with esc key or by clicking out of the modal.
+    // user must click cancel or X to close
+    'clientOptions' => [
+        'backdrop' => true, 'keyboard' => true
+        ]
 ]);
 echo "<div id='modalContent'></div>";
 Modal::end();

@@ -19,10 +19,10 @@ class SiteController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'error', 'logout', 'report'],
+                'only' => ['index', 'error', 'logout', 'report', 'energies'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'error', 'logout', 'report'],
+                        'actions' => ['index', 'error', 'logout', 'report', 'energies'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -82,6 +82,12 @@ class SiteController extends Controller {
             'summary_report' => $summary_report,
             'summary_exp' => $summary_exp,
         ]);
+    }
+    
+    public function actionEnergies() {
+        //$receipt = new \app\models\Receipt();
+        //$summary = $receipt->getEnergiesexp();
+        return $this->render('energies');
     }
 
     /**

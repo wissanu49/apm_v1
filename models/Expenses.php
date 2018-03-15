@@ -38,7 +38,7 @@ class Expenses extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['expenses_1', 'expenses_1_price', 'total', 'users_id'], 'required'],
+            [['expenses_1', 'expenses_1_price', 'total', 'users_id', 'date_record'], 'required'],
             [['users_id'], 'integer'],
             [['expenses_1_price', 'expenses_2_price', 'expenses_3_price', 'expenses_4_price', 'expenses_5_price', 'total'], 'double'],
             [['date_record'], 'safe'],

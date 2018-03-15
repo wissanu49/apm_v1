@@ -36,25 +36,23 @@ use Yii;
  * @property Invoice $invoice
  * @property Users $users
  */
-class Receipt extends \yii\db\ActiveRecord
-{
+class Receipt extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'receipt';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'leasing_id', 'rental', 'total', 'invoice_id', 'users_id'], 'required'],
-            [['rental', 'deposit', 'electric_price','water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
-            [['receipt_date','status'], 'safe'],
+            [['rental', 'deposit', 'electric_price', 'water_price', 'additional_1_price', 'additional_2_price', 'additional_3_price', 'additional_4_price', 'additional_5_price', 'refun_1_price', 'refun_2_price', 'total', 'users_id'], 'integer'],
+            [['receipt_date', 'status'], 'safe'],
             [['id', 'leasing_id', 'invoice_id'], 'string', 'max' => 25],
             [['additional_1', 'additional_2', 'additional_3', 'additional_4', 'additional_5', 'refun_1', 'refun_2'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 255],
@@ -69,8 +67,7 @@ class Receipt extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'เลขใบเสร็จรับเงิน',
             'leasing_id' => 'สัญญาเช่า',
@@ -100,34 +97,31 @@ class Receipt extends \yii\db\ActiveRecord
             'status' => 'สถานะ',
         ];
     }
-    
+
     public function scenarios() {
         $sn = parent::scenarios();
-        $sn['update_status'] = ['status'];        
+        $sn['update_status'] = ['status'];
         return $sn;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLeasing()
-    {
+    public function getLeasing() {
         return $this->hasOne(Leasing::className(), ['id' => 'leasing_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInvoice()
-    {
+    public function getInvoice() {
         return $this->hasOne(Invoice::className(), ['id' => 'invoice_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
-    {
+    public function getUsers() {
         return $this->hasOne(Users::className(), ['id' => 'users_id']);
     }
 
@@ -135,12 +129,11 @@ class Receipt extends \yii\db\ActiveRecord
      * {@inheritdoc}
      * @return ReceiptQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new ReceiptQuery(get_called_class());
     }
-    
-    public function ReceiptMonthly(){
+
+    public function ReceiptMonthly() {
         $start = date("Y-m-d", strtotime("first day of this month"));
         $stop = date("Y-m-d", strtotime("last day of this month"));
         //$sql = "SELECT sum(total) as income FROM receipt WHERE status = 'narmal' AND receipt_date BETWEEN '" . $start . "' AND '" . $stop . "'";
@@ -153,9 +146,8 @@ class Receipt extends \yii\db\ActiveRecord
         } else {
             return $sum;
         }
-        
     }
-    
+
     public function getSummary_income() {
 
         $year = date('Y');
@@ -198,21 +190,101 @@ class Receipt extends \yii\db\ActiveRecord
                 $query = 12;
                 break;
         }
-        
-        $ThaiMonth = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-        for ($i = 1; $i <= $query; $i++) {           
-            
+
+        $ThaiMonth = ['', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+        for ($i = 1; $i <= $query; $i++) {
+
             $command = Yii::$app->db->createCommand("SELECT sum(total) as income FROM receipt WHERE month(receipt_date) = '" . $i . "' AND status = 'normal'");
             $sum = $command->queryScalar();
-            if ($sum== NULL) {
+            if ($sum == NULL) {
                 $arrData[$i]['val'] = 0;
                 $arrData[$i]['month'] = $ThaiMonth[$i];
             } else {
                 $arrData[$i]['val'] = $sum;
-                $arrData[$i]['month'] = $ThaiMonth[$i];;
+                $arrData[$i]['month'] = $ThaiMonth[$i];
+                ;
             }
         }
         //print_r($arrData);
         return $arrData;
     }
+
+    public function getEnergiesexp() {
+
+        $year = date('Y');
+        $cm = date('m', strtotime('NOW'));
+        switch ($cm) {
+            case '01' :
+                $query = 1;
+                break;
+            case '02' :
+                $query = 2;
+                break;
+            case '03' :
+                $query = 3;
+                break;
+            case '04' :
+                $query = 4;
+                break;
+            case '05' :
+                $query = 5;
+                break;
+            case '06' :
+                $query = 6;
+                break;
+            case '07' :
+                $query = 7;
+                break;
+            case '07' :
+                $query = 8;
+                break;
+            case '09' :
+                $query = 9;
+                break;
+            case '10' :
+                $query = 10;
+                break;
+            case '11' :
+                $query = 11;
+                break;
+            case '12' :
+                $query = 12;
+                break;
+        }
+
+        $ThaiMonth = ['', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+        for ($i = 1; $i <= $query; $i++) {
+
+            $cmd = Yii::$app->db->createCommand("SELECT sum(rental) as rental  FROM receipt WHERE month(receipt_date) = '" . $i . "' AND status = 'normal'");
+            $sum = $cmd->queryScalar();
+            $cmd2 = Yii::$app->db->createCommand("SELECT sum(electric_price) as electric  FROM receipt WHERE month(receipt_date) = '" . $i . "' AND status = 'normal'");
+            $sum2 = $cmd->queryScalar();
+            $cmd3 = Yii::$app->db->createCommand("SELECT sum(water_price) as water_price FROM receipt WHERE month(receipt_date) = '" . $i . "' AND status = 'normal'");
+            $sum3 = $cmd->queryScalar();
+            //$sum = Receipt::find()->select(['SUM(rental) as rental','SUM(water_price) as water_price','SUM(electric_price) as electric_price'])->where(['month(receipt_date)'=>$i])->all();
+            //die(print_r($sum));
+            /*
+              if ($sum == NULL) {
+              $arrData[$i]['rental'] = 0;
+              $arrData[$i]['water_price'] = 0;
+              $arrData[$i]['electric_price'] = 0;
+              $arrData[$i]['month'] = $ThaiMonth[$i];
+              } else {
+              $arrData[$i]['rental'] = $sum;
+              $arrData[$i]['water_price'] = $sum;
+              $arrData[$i]['electric_price'] = $sum;
+              $arrData[$i]['month'] = $ThaiMonth[$i];
+              }
+             * 
+             */
+
+            $arrData[$i]['rental'] = $sum;
+            $arrData[$i]['water_price'] = $sum3;
+            $arrData[$i]['electric_price'] = $sum2;
+            $arrData[$i]['month'] = $ThaiMonth[$i];
+        }
+       // print_r($arrData);
+        return $arrData;
+    }
+
 }
