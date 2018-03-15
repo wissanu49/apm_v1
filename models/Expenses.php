@@ -24,21 +24,19 @@ use Yii;
  *
  * @property Users $users
  */
-class Expenses extends \yii\db\ActiveRecord
-{
+class Expenses extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'expenses';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['expenses_1', 'expenses_1_price', 'total', 'users_id'], 'required'],
             [['users_id'], 'integer'],
@@ -52,8 +50,7 @@ class Expenses extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'expenses_1' => 'ค่าใช้จ่าย',
@@ -75,8 +72,7 @@ class Expenses extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
-    {
+    public function getUsers() {
         return $this->hasOne(Users::className(), ['id' => 'users_id']);
     }
 
@@ -84,8 +80,84 @@ class Expenses extends \yii\db\ActiveRecord
      * {@inheritdoc}
      * @return ExpensesQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new ExpensesQuery(get_called_class());
     }
+
+    public function ExpensesMonthly() {
+        $start = date("Y-m-d", strtotime("first day of this month"));
+        $stop = date("Y-m-d", strtotime("last day of this month"));
+        //$sql = "SELECT sum(total) as income FROM receipt WHERE status = 'narmal' AND receipt_date BETWEEN '" . $start . "' AND '" . $stop . "'";
+        //die($sql);
+        $command = Yii::$app->db->createCommand("SELECT sum(total) as income FROM expenses WHERE date_record BETWEEN '" . $start . "' AND '" . $stop . "'");
+        $sum = $command->queryScalar();
+        //die(var_dump($sum));
+        if ($sum == NULL) {
+            return 0;
+        } else {
+            return $sum;
+        }
+    }
+
+    public function getSummary_exp() {
+
+        $year = date('Y');
+        $cm = date('m', strtotime('NOW'));
+        switch ($cm) {
+            case '01' :
+                $query = 1;
+                break;
+            case '02' :
+                $query = 2;
+                break;
+            case '03' :
+                $query = 3;
+                break;
+            case '04' :
+                $query = 4;
+                break;
+            case '05' :
+                $query = 5;
+                break;
+            case '06' :
+                $query = 6;
+                break;
+            case '07' :
+                $query = 7;
+                break;
+            case '07' :
+                $query = 8;
+                break;
+            case '09' :
+                $query = 9;
+                break;
+            case '10' :
+                $query = 10;
+                break;
+            case '11' :
+                $query = 11;
+                break;
+            case '12' :
+                $query = 12;
+                break;
+        }
+
+        $ThaiMonth = ['', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+        for ($i = 1; $i <= $query; $i++) {
+
+            $command = Yii::$app->db->createCommand("SELECT sum(total) as income FROM expenses WHERE month(date_record) = '" . $i . "'");
+            $sum = $command->queryScalar();
+            if ($sum == NULL) {
+                $arrData[$i]['val'] = 0;
+                $arrData[$i]['month'] = $ThaiMonth[$i];
+            } else {
+                $arrData[$i]['val'] = $sum;
+                $arrData[$i]['month'] = $ThaiMonth[$i];
+                
+            }
+        }
+        //print_r($arrData);
+        return $arrData;
+    }
+
 }

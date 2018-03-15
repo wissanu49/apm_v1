@@ -38,7 +38,7 @@ class SearchReceipt extends Receipt {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Receipt::find();
+        $query = Receipt::find()->orderBy('id DESC');
 
         // add conditions that should always apply here
 

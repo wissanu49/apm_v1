@@ -41,7 +41,7 @@ class SearchExpenses extends Expenses
      */
     public function search($params)
     {
-        $query = Expenses::find();
+        $query = Expenses::find()->orderBy('date_record DESC');
 
         // add conditions that should always apply here
 

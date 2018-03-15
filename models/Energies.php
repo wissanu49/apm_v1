@@ -23,6 +23,7 @@ class Energies extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $items;
     public static function tableName()
     {
         return 'energies';
@@ -56,12 +57,13 @@ class Energies extends \yii\db\ActiveRecord
             'rooms_id' => 'Rooms ID',
             'users_id' => 'ผู้จดบันทึก',
             'record_date' => 'วันที่บันทึก',
+            'items' => 'items',
         ];
     }
 
     public function scenarios() {
         $sn = parent::scenarios();
-        $sn['add_data'] = ['peroid', 'water_unit', 'electric_unit', 'rooms_id'];
+        $sn['add_data'] = ['id','peroid', 'water_unit', 'electric_unit', 'rooms_id'];
         
         return $sn;
     }

@@ -19,10 +19,10 @@ class SiteController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'error', 'logout'],
+                'only' => ['index', 'error', 'logout', 'report'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'error', 'logout'],
+                        'actions' => ['index', 'error', 'logout', 'report'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -69,6 +69,18 @@ class SiteController extends Controller {
         return $this->render('index', [
                     'building' => $building,
                     'invoice' => $invoice,
+        ]);
+    }
+    
+    public function actionReport() {
+        $receipt = new \app\models\Receipt();
+        $exp = new \app\models\Expenses();
+        $building = \app\models\Building::find()->all();
+        $summary_report = $receipt->getSummary_income();
+        $summary_exp = $exp->getSummary_exp();
+        return $this->render('report',[
+            'summary_report' => $summary_report,
+            'summary_exp' => $summary_exp,
         ]);
     }
 

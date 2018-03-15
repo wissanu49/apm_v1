@@ -51,12 +51,12 @@ Modal::end();
                             <td><?= $data->type ?></td>
                             <td>
                                 <?=
-                                Html::button(' บันทึกหน่วยไฟฟ้า/ปะปา', ['value' => Url::to(['energies/create', 'room' => $data->id]),
+                                Html::button(' บันทึกหน่วยไฟฟ้า/ปะปา', ['value' => Url::to(['energies/add', 'room' => $data->id]),
                                     'title' => 'บันทึกหน่วยไฟฟ้า/ปะปา : ' . $data['name'],
                                     'id' => 'showModalButton',
                                     'class' => 'btn btn-info fa fa-flash'
                                 ]) . " " .
-                                Html::button(' รายการบันทึกทั้งหมด', ['value' => Url::to(['energies/histories', 'room' => $data['id']]),
+                                Html::button(' รายการบันทึกทั้งหมด', ['value' => Url::to(['energies/histories', 'room' => $data->id]),
                                     'title' => 'รายการบันทึกทั้งหมด : ' . $data['name'],
                                     'id' => 'showModalButton',
                                     'class' => 'btn btn-warning fa fa-database'
@@ -67,9 +67,9 @@ Modal::end();
                                 <?php
                                 $status = \app\models\Leasing::checkRooms($data->id);
                                 if ($status == true) {
-                                   echo Html::button(' ย้ายเข้า', ['value' => Url::to(['leasing/checkin', 'room' => $data->id]),
+                                   echo Html::a(' ย้ายเข้า', Url::to(['leasing/checkin', 'room' => $data->id]),[
                                                 'title' => 'ย้ายเข้า : ' . $data['name'],
-                                                'id' => 'showModalButton',
+                                                //'id' => 'showModalButton',
                                                 'class' => 'btn btn-success fa fa-arrow-right',
                                     ]);
                                 } else {

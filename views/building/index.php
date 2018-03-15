@@ -63,6 +63,16 @@ Modal::end();
                             }
                         ],
                         [
+                            'attribute' => '',
+                            'label' => 'จดมิเตอร์ไฟฟ้า/ปะปา',
+                            'format' => 'raw',
+                            'value' => function($data) {
+                                return Html::a(' จดมิเตอร์ไฟฟ้า/ปะปา', ['energies/bulk', 'building' => $data['id']], ['title' => 'บริหารห้องพัก : ' . $data['building_name'],
+                                            //'id' => 'showModalButton',
+                                            'class' => 'btn btn-primary fa fa-database']);
+                            }
+                        ],
+                        [
                             'class' => 'yii\grid\ActionColumn',
                             'visibleButtons' => [
                                 'view' => function ($model, $key, $index) {

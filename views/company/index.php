@@ -43,8 +43,19 @@ Modal::end();
                         'address',
                         'phone',
                         //'logo',
-                        'electric',
-                        'water',
+                        //'electric',
+                        [
+                            'attribute' => 'electric',
+                            'value' => function ($data) {
+                                return Yii::$app->formatter->asDecimal($data->electric) . " บาท/หน่วย";
+                            }
+                        ],
+                        [
+                            'attribute' => 'water',
+                            'value' => function ($data) {
+                                return Yii::$app->formatter->asDecimal($data->water) . " บาท/หน่วย";
+                            }
+                        ],
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'visibleButtons' => [
@@ -69,7 +80,7 @@ Modal::end();
                     ],
                 ]);
                 ?>
-<?php Pjax::end(); ?>
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

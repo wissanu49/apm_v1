@@ -31,8 +31,8 @@ Modal::end();
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-<?php Pjax::begin(); ?>
-                    <?php // echo $this->render('_search', ['model' => $searchModel]);   ?>
+                <?php Pjax::begin(); ?>
+                <?php // echo $this->render('_search', ['model' => $searchModel]);   ?>
 
                 <p style="text-align: right;">
                     <?=
@@ -96,9 +96,12 @@ Modal::end();
                                 },
                                 'delete' => function ($url, $data) {
 
-                                    return Html::button(' ยกเลิก', [ 'value' => Url::to(['expenses/delete', 'id' => $data->id]),
+                                    return Html::a(' ยกเลิก',  Url::to(['expenses/delete', 'id' => $data->id]),[
                                                 'title' => 'ลบรายการ',
-                                                'id' => 'btn-confirm',
+                                                'data' => [
+                                                    'confirm' => 'คุณต้องการลบรายการนี้ ใช่ หรือ ไม่?',
+                                                    'method' => 'post',
+                                                ],
                                                 'class' => 'btn btn-danger fa fa-trash'
                                     ]);
                                 },
@@ -108,7 +111,7 @@ Modal::end();
                 ]);
                 ?>
                 <?php Pjax::end(); ?>
-               
+
             </div>
         </div>
     </div>

@@ -39,7 +39,7 @@ use dmstr\widgets\Alert;
     <div class="pull-right hidden-xs">
         <b>Version</b> 1.0
     </div>
-    <strong>Copyright &copy; 2018 <a href="http://ifusion.co.th">ifusion.co.th</a>.</strong> All rights
+    <strong>Copyright &copy; 2018 <a href="http://www.devbymgs.com">devbymgs.com</a>.</strong> All rights
     reserved.
 </footer>
 

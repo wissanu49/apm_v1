@@ -7,17 +7,21 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\EnergiesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Energies';
+$this->title = 'บันทึกหน่วยมิเตอร์ไฟฟ้า/ปะปา';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="energies-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Energies', ['create'], ['class' => 'btn btn-success']) ?>
+                <p style="text-align: right;">
+        <?= Html::a(' จดเลขมิเตอร์ไฟฟ้า/ปะปา', ['building/index'], ['class' => 'btn btn-success fa fa-plus']) ?>
     </p>
 
     <?= GridView::widget([
@@ -26,11 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
+            'rooms.name',
             'peroid',
             'water_unit',
             'electric_unit',
-            'rooms.name',
+            
             //'users_id',
             //'record_date',
 
@@ -38,4 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
     <?php Pjax::end(); ?>
-</div>
+        </div>
+    </div>
+</div> 

@@ -139,4 +139,80 @@ class Receipt extends \yii\db\ActiveRecord
     {
         return new ReceiptQuery(get_called_class());
     }
+    
+    public function ReceiptMonthly(){
+        $start = date("Y-m-d", strtotime("first day of this month"));
+        $stop = date("Y-m-d", strtotime("last day of this month"));
+        //$sql = "SELECT sum(total) as income FROM receipt WHERE status = 'narmal' AND receipt_date BETWEEN '" . $start . "' AND '" . $stop . "'";
+        //die($sql);
+        $command = Yii::$app->db->createCommand("SELECT sum(total) as income FROM receipt WHERE status = 'normal' AND receipt_date BETWEEN '" . $start . "' AND '" . $stop . "'");
+        $sum = $command->queryScalar();
+        //die(var_dump($sum));
+        if ($sum == NULL) {
+            return 0;
+        } else {
+            return $sum;
+        }
+        
+    }
+    
+    public function getSummary_income() {
+
+        $year = date('Y');
+        $cm = date('m', strtotime('NOW'));
+        switch ($cm) {
+            case '01' :
+                $query = 1;
+                break;
+            case '02' :
+                $query = 2;
+                break;
+            case '03' :
+                $query = 3;
+                break;
+            case '04' :
+                $query = 4;
+                break;
+            case '05' :
+                $query = 5;
+                break;
+            case '06' :
+                $query = 6;
+                break;
+            case '07' :
+                $query = 7;
+                break;
+            case '07' :
+                $query = 8;
+                break;
+            case '09' :
+                $query = 9;
+                break;
+            case '10' :
+                $query = 10;
+                break;
+            case '11' :
+                $query = 11;
+                break;
+            case '12' :
+                $query = 12;
+                break;
+        }
+        
+        $ThaiMonth = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+        for ($i = 1; $i <= $query; $i++) {           
+            
+            $command = Yii::$app->db->createCommand("SELECT sum(total) as income FROM receipt WHERE month(receipt_date) = '" . $i . "' AND status = 'normal'");
+            $sum = $command->queryScalar();
+            if ($sum== NULL) {
+                $arrData[$i]['val'] = 0;
+                $arrData[$i]['month'] = $ThaiMonth[$i];
+            } else {
+                $arrData[$i]['val'] = $sum;
+                $arrData[$i]['month'] = $ThaiMonth[$i];;
+            }
+        }
+        //print_r($arrData);
+        return $arrData;
+    }
 }

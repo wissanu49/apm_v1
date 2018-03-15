@@ -5,7 +5,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?= $directoryAsset ?>/img/maleuser.jpg" class="img-circle" alt="User Image"/>
+                <img src="<?php echo Yii::getAlias('@web') . '/web/image/maleuser.jpg' ?>" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
                 <p><?= Yii::$app->user->identity->username   ?></p>
@@ -27,20 +27,18 @@
                         ['label' => 'ตึก/อาคาร', 'icon' => 'building', 'url' => ['/building']],
                         ['label' => 'ห้องพัก', 'icon' => 'bed', 'url' => ['/rooms']],                        
                         ['label' => 'สัญญาเช่า', 'url' => ['/leasing']],
-                        /*
+                        
                         [
-                            'label' => 'บันทึกค่าไฟฟ้า/ปะปา',
-                            'icon' => 'gears',
+                            'label' => 'รายรับ-รายจ่าย',
+                            'icon' => 'money',
                             'url' => '#',
                             'items' => [
-                                ['label' => 'บันทึกหน่วยไฟฟ้า', 'icon' => 'flash', 'url' => ['/recordenergies/electric'],],
-                                ['label' => 'บันทึกหน่วยปะปา', 'icon' => 'database', 'url' => ['/recordenergies/water'],],
+                                ['label' => 'ค่าใช้จ่าย', 'icon' => 'money', 'url' => ['/expenses'],],
+                                ['label' => 'สรุปรายรับ-รายจ่าย', 'icon' => 'database', 'url' => ['/site/report'],],
                             ],
                         ],
-                         * 
-                         */
                         ['label' => 'ใบแจ้งหนี้','icon' => 'file', 'url' => ['/invoice']],
-                        ['label' => 'ค่าใช้จ่าย','icon' => 'money', 'url' => ['/expenses']],
+                        //['label' => 'ค่าใช้จ่าย','icon' => 'money', 'url' => ['/expenses']],
                         ['label' => 'ใบเสร็จรับเงิน','icon' => 'money', 'url' => ['/receipt']],
                         ['label' => 'ตั้งค่าระบบ','icon' => 'gear', 'url' => ['/company']],
                         ['label' => 'ผู้ใช้งาน','icon' => 'user', 'url' => ['/users']],

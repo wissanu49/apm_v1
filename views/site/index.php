@@ -21,7 +21,7 @@ foreach ($building as $build) {
                         $rooms = app\models\Rooms::find()->where(['building_id' => $build->id])->all();
                         foreach ($rooms as $r) {
                             ?>
-                            <div class="col-md-2 col-sm-4 col-xs-12">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
                                 <div class="info-box">
                                     <?php
                                     if ($r->status == 'ว่าง') {

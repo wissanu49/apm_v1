@@ -22,10 +22,10 @@ class EnergiesController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'update', 'delete', 'add', 'histories'],
+                'only' => ['index', 'update', 'delete', 'add', 'histories', 'bulk'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'delete', 'add', 'histories'],
+                        'actions' => ['index', 'update', 'delete', 'add', 'histories', 'bulk'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -97,6 +97,72 @@ class EnergiesController extends Controller {
         return $this->renderAjax('create', [
                     'model' => $model,
                     'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionBulk($building) {
+        $model = new Energies();
+
+        //$model->rooms_id = $room;
+        $model->users_id = Yii::$app->user->identity->id;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $transection = \Yii::$app->db->beginTransaction();
+            try {
+                $flag = 0;
+                //$model->save(); //บันทึกใบ Order
+
+                $items = Yii::$app->request->post();
+
+                //die(print_r($items['Energies']['items']));
+
+                foreach ($items['Energies']['items'] as $key => $val) { //นำรายการที่เลือกมา loop บันทึก
+                    $energies = new Energies();
+                    //$energies->scenario = 'add_data';
+                    //$id = Energies::find()->select('MAX(id) as id')->one();
+                    /*
+                      if(empty($val['id'])){
+                      $order_detail = new Energies();
+                      }else{
+                      $order_detail = OrderDetail::findOne($val['id']);
+                      }
+                     * 
+                     */
+                    //$model->id =  $model->id + ($id->id +1 );
+                    if (($val['peroid'] != "") && ($val['water_unit'] != "") && ($val['electric_unit'] != "") && ($val['rooms_id'] != "")) {
+                        $energies->peroid = $val['peroid'];
+                        $energies->water_unit = $val['water_unit'];
+                        $energies->electric_unit = $val['electric_unit'];
+                        $energies->rooms_id = $val['rooms_id'];
+                        $energies->users_id = Yii::$app->user->identity->id;
+                        $energies->record_date = date('Y-m-d H:i:s');
+                        $save = $energies->save();
+                        if (!$save) {
+                            $flag += 1;
+                        }
+                    }
+                }
+
+                if ($flag == 0) {
+                    $transection->commit();
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลเรียบร้อย');
+                    return $this->redirect(['building/index']);
+                    //return $this->redirect(Yii::$app->request->referrer);
+                } else {
+                    $transection->rollBack();
+                    Yii::$app->session->setFlash('error', 'มีข้อผิดพลาดในการบันทึก');
+                    return $this->redirect(['building/index']);
+                }
+            } catch (Exception $ex) {
+                $transection->rollBack();
+                Yii::$app->session->setFlash('error', 'มีข้อผิดพลาดในการบันทึก');
+                return $this->redirect(['building/index']);
+            }
+        }
+
+        return $this->renderAjax('bulk', [
+                    'model' => $model,
+                    'building' => $building,
         ]);
     }
 
