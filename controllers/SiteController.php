@@ -75,19 +75,24 @@ class SiteController extends Controller {
     public function actionReport() {
         $receipt = new \app\models\Receipt();
         $exp = new \app\models\Expenses();
-        $building = \app\models\Building::find()->all();
+        
         $summary_report = $receipt->getSummary_income();
         $summary_exp = $exp->getSummary_exp();
+        
         return $this->render('report',[
             'summary_report' => $summary_report,
             'summary_exp' => $summary_exp,
+            
         ]);
     }
     
     public function actionEnergies() {
         //$receipt = new \app\models\Receipt();
         //$summary = $receipt->getEnergiesexp();
-        return $this->render('energies');
+        $building = \app\models\Building::find()->all();
+        return $this->render('energies',[
+            'building' => $building,
+        ]);
     }
 
     /**

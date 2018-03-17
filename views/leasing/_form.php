@@ -43,7 +43,7 @@ $form->field($model, 'move_in')->widget(
     // modify template for custom rendering
     //'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
     'template' => '{input}{addon}',
-    'options' => ['placeholder' => 'วันที่ย้ายออก'],
+    'options' => ['placeholder' => 'วันที่ย้ายเข้า'],
     'value' => date('Y-m-d'),
     'language' => 'th',
     'clientOptions' => [

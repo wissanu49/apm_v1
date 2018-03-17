@@ -64,7 +64,7 @@ class Building extends \yii\db\ActiveRecord {
     }
 
     public static function getBuildingName($id) {
-        $query = Building::find()->select('building_name')->one();
+        $query = Building::find()->select('building_name')->where(['id'=>$id])->one();
         echo $query->building_name;
     }
 

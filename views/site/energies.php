@@ -1,9 +1,6 @@
 <?php
 
-use yii\helpers\Html;
 use app\models\Receipt;
-use app\models\Expenses;
-use dosamigos\chartjs\ChartJs;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EnergiesSearch */
@@ -54,59 +51,72 @@ switch ($cm) {
 }
 
 $ThaiMonth = ['', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-$j = 1;
-for ($i = 1; $i <= $query; $i++) {
-    $sum[$i] = Receipt::find()->select(['SUM(rental) as rental', 'SUM(water_price) as water_price', 'SUM(electric_price) as electric_price', 'SUM(additional_1_price) as additional_1_price','SUM(additional_2_price) as additional_2_price','SUM(additional_3_price) as additional_3_price','SUM(additional_4_price) as additional_4_price','SUM(additional_5_price) as additional_5_price'])->where(['month(receipt_date)' => $i])->all();
-    $j = $i;
-}
 ?>
 
 <div class="row">
     <div class="col-xs-12">
+<?php
+foreach ($building as $build) {
+    //$bid[$b] = $build['id'];
+    $j = 1;
+    for ($i = 1; $i <= $query; $i++) {
+        $sum[$i] = Receipt::find()->
+                select(['SUM(receipt.rental) as rental', 'SUM(receipt.water_price) as water_price', 'SUM(receipt.electric_price) as electric_price', 'SUM(receipt.additional_1_price) as additional_1_price', 'SUM(receipt.additional_2_price) as additional_2_price', 'SUM(receipt.additional_3_price) as additional_3_price', 'SUM(receipt.additional_4_price) as additional_4_price', 'SUM(receipt.additional_5_price) as additional_5_price'])
+                ->leftJoin('invoice', 'invoice.id = receipt.invoice_id')
+                ->leftJoin('rooms', 'rooms.id = invoice.rooms_id')
+                ->leftJoin('building', 'building.id = rooms.building_id')
+                ->where(['month(receipt.receipt_date)' => $i, 'building.id' => $build['id']])
+                ->all();
+        $j = $i;
+    }
+    ?>
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                           สรุปรายรับ อาคาร : <?= app\models\Building::getBuildingName($build['id']) ?> ปี <?= date('Y') + 543; ?>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table">
+                                <table class="table table-hover table-bordered" style="width: 100%;">
 
-        <div class="row">
-            <div class="col-xs-12 col-md-12 col-lg-12">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        สรุปรายรับแต่ละประเภท <?= date('Y') + 543; ?>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="table">
-                            <table class="table table-hover table-bordered" style="width: 100%;">
-                                
-                                <tr>
-                                    <th>เดือน</th>
-                                    <th>ค่าเช่า</th>
-                                    <th>ค่าไฟฟ้า</th>
-                                    <th>ค่าน้ำปะปา</th>
-                                    <th>อื่น ๆ</th>
-                                    <th>รวม</th>
-                                </tr>
-                                <?php
-                                for ($k = 1; $k <= $j; $k++) {
-                                    foreach ($sum[$k] as $data) {
-                                        
-                                        $add = $data['additional_1_price'] +  $data['additional_2_price'] + $data['additional_3_price'] + $data['additional_4_price'] + $data['additional_5_price'];
-                                        
-                                        $total  = $add + $data['rental'] + $data['electric_price'] + $data['electric_price'];
-                                                ?>
-                                        <tr>
-                                            <td><h4><?= $ThaiMonth[$k] ?></h4></td>
-                                            <td><?= isset($data['rental']) ? Yii::$app->formatter->asDecimal($data['rental']) : "0.00"; ?></td>
-                                            <td><?= isset($data['electric_price']) ? Yii::$app->formatter->asDecimal($data['electric_price']) : "0.00"; ?></td>
-                                            <td><?= isset($data['electric_price']) ? Yii::$app->formatter->asDecimal($data['water_price']) : "0.00"; ?></td>
-                                            <td><?= isset($add) ? Yii::$app->formatter->asDecimal($add) : "0.00"; ?></td>
-                                            <td><h4><?= isset($total) ? Yii::$app->formatter->asDecimal($total) : "0.00"; ?></h4></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                }
-                                ?>
-                            </table>
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div><!-- /.panel -->
-            </div> 
-        </div>
+                                    <tr>
+                                        <th>เดือน</th>
+                                        <th>ค่าเช่า</th>
+                                        <th>ค่าไฟฟ้า</th>
+                                        <th>ค่าน้ำปะปา</th>
+                                        <th>อื่น ๆ</th>
+                                        <th>รวม</th>
+                                    </tr>
+    <?php
+    for ($k = 1; $k <= $j; $k++) {
+        foreach ($sum[$k] as $data) {
+
+            $add = $data['additional_1_price'] + $data['additional_2_price'] + $data['additional_3_price'] + $data['additional_4_price'] + $data['additional_5_price'];
+
+            $total = $add + $data['rental'] + $data['electric_price'] + $data['electric_price'];
+            ?>
+                                            <tr>
+                                                <td><h4><?= $ThaiMonth[$k] ?></h4></td>
+                                                <td><?= isset($data['rental']) ? Yii::$app->formatter->asDecimal($data['rental']) : "0.00"; ?></td>
+                                                <td><?= isset($data['electric_price']) ? Yii::$app->formatter->asDecimal($data['electric_price']) : "0.00"; ?></td>
+                                                <td><?= isset($data['electric_price']) ? Yii::$app->formatter->asDecimal($data['water_price']) : "0.00"; ?></td>
+                                                <td><?= isset($add) ? Yii::$app->formatter->asDecimal($add) : "0.00"; ?></td>
+                                                <td><h4><?= isset($total) ? Yii::$app->formatter->asDecimal($total) : "0.00"; ?></h4></td>
+                                            </tr>
+            <?php
+        }
+    }
+    ?>
+                                </table>
+                            </div>
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                </div> 
+            </div>
+
+    <?php
+} // end foreach
+?>
     </div> 
 </div>
