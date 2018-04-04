@@ -26,6 +26,7 @@ $config = [
         ],
         'formatter' => [
             'dateFormat' => 'dd-MM-yyyy',
+            //'datetimeFormat' => 'php:d-m-Y H:i:s',
             'decimalSeparator' => '.',
             'thousandSeparator' => ',',
             'currencyCode' => 'THA',

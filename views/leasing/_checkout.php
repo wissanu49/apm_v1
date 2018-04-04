@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\Leasing */
 /* @var $form yii\widgets\ActiveForm */
-$this->title = 'ย้ายออก';
+$this->title = Yii::$app->name.' : ย้ายออก';
 $dateCreate = date('Y-m-d H:i:s');
 
 foreach ($customer as $cus) {
@@ -343,7 +343,25 @@ $form = ActiveForm::begin();
     
         WaterCal();
         ElectricCal();
-        $('#" . Html::getInputId($invoice, 'rental') . "').change(function(e){ 
+         $('#" . Html::getInputId($invoice, 'rental') . "').change(function(e){ 
+            rental = parseInt($('#" . Html::getInputId($invoice, 'rental') . "').val());
+           if(isNaN(rental)){
+                $('#" .Html::getInputId($invoice, 'rental') . "').val(0); 
+            }
+           TotalCal();
+        });
+         $('#" . Html::getInputId($invoice, 'electric_price') . "').change(function(e){ 
+            electric_price = parseInt($('#" . Html::getInputId($invoice, 'electric_price') . "').val());
+           if(isNaN(electric_price)){
+                $('#" .Html::getInputId($invoice, 'electric_price') . "').val(0); 
+            }
+           TotalCal();
+        });
+        $('#" . Html::getInputId($invoice, 'water_price') . "').change(function(e){ 
+            water_price = parseInt($('#" . Html::getInputId($invoice, 'water_price') . "').val());
+           if(isNaN(water_price)){
+                $('#" .Html::getInputId($invoice, 'water_price') . "').val(0); 
+            }
            TotalCal();
         });
           

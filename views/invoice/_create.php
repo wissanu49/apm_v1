@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 
 
-$this->title = 'ออกใบแจ้งหนี้';
+$this->title = Yii::$app->name.' : ออกใบแจ้งหนี้';
 
 $dateCreate = date('Y-m-d H:i:s');
 

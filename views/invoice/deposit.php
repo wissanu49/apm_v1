@@ -85,14 +85,14 @@ $dateCreate = date('Y-m-d H:i:s');
                                     <td>1</td>
                                     <td>ค่าห้องพัก</td>
                                     <td>
-                                        <?= $form->field($model, 'rental')->textInput(['readonly' => 'readonly'])->label(false) ?>
+                                        <?= $form->field($model, 'rental')->textInput()->label(false) ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
                                     <td>ค่าประกันห้อง</td>
                                     <td>
-                                        <?= $form->field($model, 'deposit')->textInput(['readonly' => 'readonly'])->label(false) ?>
+                                        <?= $form->field($model, 'deposit')->textInput()->label(false) ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -177,7 +177,23 @@ $dateCreate = date('Y-m-d H:i:s');
             <?php
             $this->RegisterJs("
     $('document').ready(function(){
-          
+        TotalCal();
+        
+        $('#" . Html::getInputId($model, 'deposit') . "').change(function(e){ 
+            deposit = parseInt($('#" . Html::getInputId($model, 'deposit') . "').val());
+           if(isNaN(deposit)){
+                $('#" .Html::getInputId($model, 'deposit') . "').val(0); 
+            }
+           TotalCal();
+        });
+        $('#" . Html::getInputId($model, 'rental') . "').change(function(e){ 
+            rental = parseInt($('#" . Html::getInputId($model, 'rental') . "').val());
+           if(isNaN(rental)){
+                $('#" .Html::getInputId($model, 'rental') . "').val(0); 
+            }
+           TotalCal();
+        });
+        
         $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();
         });

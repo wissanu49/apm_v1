@@ -75,6 +75,7 @@ $this->title = Yii::$app->name . ' : ใบแจ้งหนี้เลขท�
                                 <b>ที่อยู่ : </b><?= $cus_addr ?>
                             </div>
                             <div class="col-xs-6" style="text-align: right;">
+                                <?php Yii::$app->formatter->timeZone = 'UTC';  ?>
                                 <br><b>วันที่ออกบิล : </b><?= Yii::$app->formatter->asDate($invoice_date) ?>
                             <br>
                             <b>กรุณาชำระก่อนวันที่ : </b><?= Yii::$app->formatter->asDate($appointment) ?>
