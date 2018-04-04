@@ -3,18 +3,30 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use dosamigos\datepicker\DatePicker;
-use yii\helpers\ArrayHelper;
-use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Leasing */
+/* @var $model app\models\Invoice */
 /* @var $form yii\widgets\ActiveForm */
+$dataOption = [
+    'ค่าประกันห้อง (Deposit)' => 'ค่าประกันห้อง (Deposit)',
+    'ค่าส่วนกลาง (Facility)' => 'ค่าส่วนกลาง (Facility)',
+    'ค่าโทรศัพท์ (Telephone)' => 'ค่าโทรศัพท์ (Telephone)',
+    'ค่าเคเบิลทีวี (Cable TV)' => 'ค่าเคเบิลทีวี (Cable TV)',
+    'ค่าปรับ (Penalty fee)' => 'ค่าปรับ (Penalty fee)',
+    'ค่าซ่อมบำรุง (Maintenance)' => 'ค่าซ่อมบำรุง (Maintenance)',
+    'ค่าซ่อมบำรุง (Maintenance)' => 'ค่าซ่อมบำรุง (Maintenance)',
+    'ค่าเช่าเฟอร์นิเจอร์ (Furniture)' => 'ค่าเช่าเฟอร์นิเจอร์ (Furniture)',
+    'ค่าบริการ (Service)' => 'ค่าบริการ (Service)',
+    'ค้างจ่าย (Arrears)' => 'ค้างจ่าย (Arrears)',
+];
+
+$this->title = Yii::$app->name . ' : ออกใบแจ้งหนี้';
+
 $dateCreate = date('Y-m-d H:i:s');
 ?>
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?php // $form->field($model, 'id')->textInput(['maxlength' => true, 'disabled' => true])  ?>
 <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
 <div class="row">
     <div class="col-xs-2 col-sm-2 col-md-2">
@@ -61,33 +73,32 @@ $dateCreate = date('Y-m-d H:i:s');
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-xs-2 col-sm-2 col-md-2">
-         <?= $form->field($model, 'deposit')->textInput(['value' => isset($model->rooms_id) ? $model->rooms->deposit : NULL, 'readonly' => 'readonly']) ?>
+        <?= $form->field($model, 'deposit')->textInput(['value' => isset($model->rooms_id) ? $model->rooms->deposit : NULL, 'readonly' => 'readonly']) ?>
     </div>
     <div class="col-xs-10 col-sm-10 col-md-10">
         <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
-       
+
     </div>
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <?php $form = ActiveForm::begin(); ?>
+
                 <!-- Table row -->
-                <?= $form->field($invoice, 'id')->hiddenInput()->label(false) ?>
-                <?= $form->field($invoice, 'leasing_id')->hiddenInput()->label(false) ?>
-                 <?= $form->field($invoice, 'rooms_id')->hiddenInput()->label(false) ?>
-                 <?= $form->field($invoice, 'electric_unit')->hiddenInput(['value'=>0])->label(false) ?>
-                 <?= $form->field($invoice, 'electric_price')->hiddenInput(['value'=>0])->label(false) ?>
-                 <?= $form->field($invoice, 'water_unit')->hiddenInput(['value'=>0])->label(false) ?>
-                 <?= $form->field($invoice, 'water_price')->hiddenInput(['value'=>0])->label(false) ?>
+                <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
+                <?= $form->field($model, 'leasing_id')->hiddenInput()->label(false) ?>
+                <?= $form->field($model, 'rooms_id')->hiddenInput()->label(false) ?>
+                <?= $form->field($model, 'electric_unit')->hiddenInput(['value' => 0])->label(false) ?>
+                <?= $form->field($model, 'electric_price')->hiddenInput(['value' => 0])->label(false) ?>
+                <?= $form->field($model, 'water_unit')->hiddenInput(['value' => 0])->label(false) ?>
+                <?= $form->field($model, 'water_price')->hiddenInput(['value' => 0])->label(false) ?>
                 <?php
                 foreach ($customer as $cus) {
                     $cus_name = $cus['fullname'];
@@ -96,7 +107,7 @@ $dateCreate = date('Y-m-d H:i:s');
                 ?>
 
                 <div class="row">
-                    <div class="col-xs-8 col-sm-8 table-responsive">
+                    <div class="col-xs-8 table-responsive">
                         <div class="row">
 
                             <div class="col-lg-6" style="text-align: left;">
@@ -104,15 +115,15 @@ $dateCreate = date('Y-m-d H:i:s');
                             </div>
                             <div class="col-lg-6" style="text-align: right;">
                                 <h4>ใบแจ้งหนี้</h4>
-                                <b>เลขที่ : </b><?= $invoice->id ?>
+                                <b>เลขที่ : </b><?= $model->id ?>
                             </div>
-                            
+
 
                         </div>
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6">
-                               
-                                <b>สัญญาเช่า : </b><?= $invoice->leasing_id; ?>
+
+                                <b>สัญญาเช่า : </b><?= $model->leasing_id; ?>
                                 <br>
                                 <b>ลูกค้า : </b><?= $cus_name; ?><br>
                                 <b>ที่อยู่ : </b><?= $cus_addr; ?>
@@ -133,54 +144,54 @@ $dateCreate = date('Y-m-d H:i:s');
                                     <td>1</td>
                                     <td>ค่าห้องพัก</td>
                                     <td>
-                                        <?= $form->field($invoice, 'rental')->textInput()->label(false) ?>
+                                        <?= $form->field($model, 'rental')->textInput(['readonly' => 'readonly'])->label(false) ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
                                     <td>ค่าประกันห้อง</td>
                                     <td>
-                                        <?= $form->field($invoice, 'deposit')->textInput()->label(false) ?>
+                                        <?= $form->field($model, 'deposit')->textInput(['readonly' => 'readonly'])->label(false) ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
-                                    <td><?= $form->field($invoice, 'additional_1')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
-                                    <td><?= $form->field($invoice, 'additional_1_price')->textInput()->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_1')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_1_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>4</td>
-                                    <td><?= $form->field($invoice, 'additional_2')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
-                                    <td><?= $form->field($invoice, 'additional_2_price')->textInput()->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_2')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_2_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>5</td>
-                                    <td><?= $form->field($invoice, 'additional_3')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
-                                    <td><?= $form->field($invoice, 'additional_3_price')->textInput()->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_3')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_3_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>6</td>
-                                    <td><?= $form->field($invoice, 'additional_4')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
-                                    <td><?= $form->field($invoice, 'additional_4_price')->textInput()->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_4')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_4_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>7</td>
-                                    <td><?= $form->field($invoice, 'additional_5')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
-                                    <td><?= $form->field($invoice, 'additional_5_price')->textInput()->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_5')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'additional_5_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td style="text-align: right; font-size: 16px;"><b>ราคารวม</b></td>
                                     <?php
-                                    $total = $invoice->rental + $invoice->deposit;
+                                    $total = $model->rental + $model->deposit;
                                     ?>
-                                    <td><?= $form->field($invoice, 'total')->textInput(['value' => $total, 'readonly' => 'readonly'])->label(false) ?></td>
+                                    <td><?= $form->field($model, 'total')->textInput(['value' => $total, 'readonly' => 'readonly'])->label(false) ?></td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="col-lg-6">
                             <?=
-                            $form->field($invoice, 'appointment')->widget(Datepicker::className(), [
+                            $form->field($model, 'appointment')->widget(Datepicker::className(), [
                                 'template' => '{input}{addon}',
                                 'options' => ['placeholder' => 'วันกำหนดชำระ'],
                                 'value' => NULL,
@@ -194,64 +205,53 @@ $dateCreate = date('Y-m-d H:i:s');
                             ?>
                         </div>
                         <div class="col-lg-6">
-                            <?= $form->field($invoice, 'comment')->textarea(['rows' => 5]) ?>
+                            <?= $form->field($model, 'comment')->textarea(['rows' => 5]) ?>
                         </div>
 
-                        <?=$form->field($invoice, 'status')->hiddenInput(['value' => 'รอการชำระ'])->label(false) ?>
+                        <?= $form->field($model, 'status')->hiddenInput(['value' => 'รอการชำระ'])->label(false) ?>
 
-                        <?= $form->field($invoice, 'users_id')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false) ?>
+                        <?= $form->field($model, 'users_id')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false) ?>
 
-                        <?= $form->field($invoice, 'invoice_date')->hiddenInput(['value'=> $dateCreate])->label(false) ?>
+                        <?= $form->field($model, 'invoice_date')->hiddenInput(['value' => $dateCreate])->label(false) ?>
 
+                        <div class="form-group">
+                            <?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success fa fa-save']) ?>
+                        </div>
                     </div>
                     <!-- /.col -->
                 </div>
 
 
+
+                <?php // $form->field($model, 'id')->textInput(['maxlength' => true, 'readonly' => 'readonly'])    ?>
+
+
+                <?php //$form->field($model, 'total')->textInput()  ?>
+
+
+
+                <?php ActiveForm::end(); ?>
             </div>
-            
         </div>
     </div>
 </div>
-
-<div class="form-group">
-    <?= Html::submitButton(' บันทึก', ['class' => 'btn btn-success btn-lg fa fa-save']) ?>
-</div>
-
-<?php ActiveForm::end(); ?>
 <?php
-            $this->RegisterJs("
+$this->RegisterJs("
     $('document').ready(function(){
           
-        TotalCal();
-        
-        $('#" . Html::getInputId($invoice, 'rental') . "').change(function(e){ 
-            rental =  parseInt($('#" . Html::getInputId($invoice, 'rental') . "').val());
-                if(isNaN(rental)){
-                $('#" .Html::getInputId($invoice, 'rental') . "').val(0); 
-            }
+        $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();
         });
-        $('#" . Html::getInputId($invoice, 'deposit') . "').change(function(e){ 
-           deposit =  parseInt($('#" . Html::getInputId($invoice, 'deposit') . "').val());
-               if(isNaN(deposit)){
-                $('#" .Html::getInputId($invoice, 'deposit') . "').val(0); 
-            }
+        $('#" . Html::getInputId($model, 'additional_2_price') . "').change(function(e){ 
            TotalCal();
         });
-        $('#" . Html::getInputId($invoice, 'additional_1_price') . "').change(function(e){ 
+        $('#" . Html::getInputId($model, 'additional_3_price') . "').change(function(e){ 
            TotalCal();
         });
-        $('#" . Html::getInputId($invoice, 'additional_2_price') . "').change(function(e){ 
+        $('#" . Html::getInputId($model, 'additional_4_price') . "').change(function(e){ 
            TotalCal();
         });
-        $('#" . Html::getInputId($invoice, 'additional_3_price') . "').change(function(e){ 
-           TotalCal();
-        });
-        $('#" . Html::getInputId($invoice, 'additional_4_price') . "').change(function(e){ 
-           TotalCal();
-        });
-        $('#" . Html::getInputId($invoice, 'additional_5_price') . "').change(function(e){ 
+        $('#" . Html::getInputId($model, 'additional_5_price') . "').change(function(e){ 
            TotalCal();
         });
         
@@ -299,4 +299,5 @@ $dateCreate = date('Y-m-d H:i:s');
     });
 
     ");
-            ?>
+?>
+

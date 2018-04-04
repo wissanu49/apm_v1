@@ -5,12 +5,15 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
+use dosamigos\datepicker\DatePicker;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\Models\SearchInvoice */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'ใบแจ้งหนี้';
+$this->title = Yii::$app->name.' : ใบแจ้งหนี้';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -20,15 +23,23 @@ Modal::begin([
     'size' => 'modal-lg',
 ]);
 echo "<div id='modalContent'></div>";
+echo "<div id='modalFooter' style=\"text-align:right;\">";
+echo Html::button(' Closed ', ['value' => '',
+                        'id' => 'close-button',
+                        'class' => 'btn btn-danger fa fa-close',
+                        'data-dismiss' => 'modal',
+    ]);
+echo "</div>";
 Modal::end();
 ?>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="box">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <div class="table-responsive">
                 <?php Pjax::begin(); ?>
                 <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
@@ -38,8 +49,41 @@ Modal::end();
                     'filterModel' => $searchModel,
                     'columns' => [
                         ['class' => 'yii\grid\SerialColumn'],
-                        'id',
-                        'leasing_id',
+                        [
+                            'attribute' => 'id',
+                            'format' => 'text',
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'id',
+                                'data' => ArrayHelper::map(app\models\Invoice::find()->all(), 'id', 'id'),
+                                'theme' => Select2::THEME_BOOTSTRAP,
+                                //'hideSearch' => true,
+                                'options' => [
+                                    'placeholder' => 'ค้นหา...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ]),
+                        ],
+                        //'leasing_id',
+                        [
+                            'attribute' => 'leasing_id',
+                            'format' => 'text',
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'leasing_id',
+                                'data' => ArrayHelper::map(app\models\Invoice::find()->all(), 'leasing_id', 'leasing_id'),
+                                'theme' => Select2::THEME_BOOTSTRAP,
+                                //'hideSearch' => true,
+                                'options' => [
+                                    'placeholder' => 'ค้นหา...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ]),
+                        ],
                         //'room_price',
                         //'electric_unit',
                         //'electric_price',
@@ -81,7 +125,24 @@ Modal::end();
                                 }
                             }
                         ],
-                                'appointment',
+                        //'appointment',
+                                [
+                            'attribute' => 'appointment',
+                            'format' => 'text',
+                            'value' => function($data) {
+                                return Yii::$app->formatter->asDate($data->appointment);
+                            },
+                            'filter' => DatePicker::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'appointment',
+                                'template' => '{input}{addon}',
+                                'language' => 'th',
+                                'clientOptions' => [
+                                    'autoclose' => true,
+                                    'format' => 'yyyy-mm-dd'
+                                ]
+                            ])
+                        ],
                         //'users_id',
                         //'invoice_date',
                         [
@@ -99,19 +160,26 @@ Modal::end();
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'visibleButtons' => [
-                                'update' => function ($model, $key, $index) {
-                                    return false;
-                                },
+                                //'update' => function ($model, $key, $index) {
+                                //    return false;
+                                //},
                                 'delete' => function ($model, $key, $index) {
                                     return false;
                                 },
                             ],
-                            'template' => '{view}',
+                            'template' => '{view} {update}',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::button('', ['value' => Url::to(['invoice/view', 'id' => $model->id]),
                                                 'title' => 'ข้อมูลใบแจ้งหนี้',
                                                 'id' => 'showModalButton',
+                                                'class' => 'btn btn-info fa fa-file'
+                                    ]);
+                                },
+                                'update' => function ($url, $model) {
+                                    return Html::a('',  Url::to(['invoice/update', 'id' => $model->id]),[
+                                                'title' => 'แก้ไขข้อมูลใบแจ้งหนี้',
+                                                //'id' => 'showModalButton',
                                                 'class' => 'btn btn-primary fa fa-edit'
                                     ]);
                                 },
@@ -121,6 +189,7 @@ Modal::end();
                 ]);
                 ?>
                 <?php Pjax::end(); ?>
+                </div>
             </div>
         </div>
     </div>

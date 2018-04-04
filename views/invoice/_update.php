@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 
 
-$this->title = 'ออกใบแจ้งหนี้';
+$this->title = 'แก้ไขใบแจ้งหนี้';
 
 $dateCreate = date('Y-m-d H:i:s');
 
@@ -36,7 +36,7 @@ foreach ($config as $cfg){
                 <!-- Table row -->
                 <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
                 <?= $form->field($model, 'leasing_id')->hiddenInput()->label(false) ?>
-                <?= $form->field($model, 'rooms_id')->hiddenInput(['value' => $room])->label(false) ?>
+                <?= $form->field($model, 'rooms_id')->hiddenInput()->label(false) ?>
 
 
                 <div class="row">
@@ -62,7 +62,7 @@ foreach ($config as $cfg){
                                 <b>ที่อยู่ : </b><?= $cus_addr; ?>
                             </div>
                             <div class="col-xs-6" style="text-align: right;">
-                                <h3>ห้อง : <?= \app\models\Rooms::showName($room); ?></h3>
+                                <h3>ห้อง : <?= \app\models\Rooms::showName($model->rooms_id); ?></h3>
                             </div>
 
                         </div>
@@ -78,84 +78,32 @@ foreach ($config as $cfg){
                                         <?= $form->field($model, 'rental')->textInput()->label(false) ?>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <table>
-                                            <tr>
-                                                <td colspan="3">
-                                                    หน่วยไฟฟ้าที่ใช้งาน [ หน่วยละ <?= $electric ?> บาท]
-                                                </td>
-                                                <td>รวม</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <?=
-                                                    $form->field($model, 'electric_unit_to')->dropDownList(ArrayHelper::map(app\models\Energies::getElectric($room), 'electric_unit', function ($data) {
-                                                                return Yii::$app->formatter->asDate($data['peroid']) . ' [' . $data['electric_unit'] . ']';
-                                                            }))->label(false)
-                                                    ?>
-                                                </td>
-                                                <td style="width: 10%; text-align: center;"> - </td>
-                                                <td>
-                                                    <?=
-                                                    $form->field($model, 'electric_unit_from')->dropDownList(ArrayHelper::map(array_reverse(app\models\Energies::getElectric($room)), 
-                                                            'electric_unit', 
-                                                            function ($data) {
-                                                                return Yii::$app->formatter->asDate($data['peroid']) . ' [' . $data['electric_unit'] . ']';
-                                                            }))->label(false)
-                                                    ?>
-                                                </td>
-                                                <td style="width: 20%;">
-                                                    <div class="form-group">
-
-                                                        <?= Html::textInput('', '', ['id' => 'invoice-electric_unit_total', 'class' => 'form-control', 'readonly' => 'readonly']) ?>
-                                                    </div>
-                                                </td>
-
-                                            </tr>
-
-
-                                        </table>
-
-
-                                    </td>
-                                    <td style="vertical-align: bottom;"><?= $form->field($model, 'electric_price')->textInput()->label(false) ?></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <table>
-                                            <tr>
-                                                <td colspan="3">
-                                                    หน่วยน้ำปะปาที่ใช้งาน [ หน่วยละ <?= $water ?> บาท ]
-                                                </td>
-                                                <td>รวม</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <?=
-                                                    $form->field($model, 'water_unit_to')->dropDownList(ArrayHelper::map(app\models\Energies::getWater($room), 'water_unit', function ($model) {
-                                                                return Yii::$app->formatter->asDate($model['peroid']) . ' [' . $model['water_unit'] . ']';
-                                                            }))->label(false)
-                                                    ?>
-                                                </td>
-                                                <td style="width: 10%; text-align: center;"> - </td>
-                                                <td>
-                                                    <?=
-                                                    $form->field($model, 'water_unit_from')->dropDownList(ArrayHelper::map(array_reverse(app\models\Energies::getWater($room)), 'water_unit', function ($model) {
-                                                                return Yii::$app->formatter->asDate($model['peroid']) . ' [' . $model['water_unit'] . ']';
-                                                            }))->label(false)
-                                                    ?>
-                                                </td>  
-                                                <td style="width: 20%;">
-                                                    <div class="form-group">
-                                                        <?= Html::textInput('', '', ['id' => 'invoice-water_unit_total', 'class' => 'form-control', 'readonly' => 'readonly']) ?>
-                                                    </div>
-                                                </td>
-                                            </tr>    
-                                        </table>
-                                    </td>
-                                    <td style="vertical-align: bottom;"><?= $form->field($model, 'water_price')->textInput()->label(false) ?></td>
-                                </tr>
+                                <?php if ($model->deposit > 0) { ?>
+                                    <tr>
+                                        <td>ค่าประกันห้อง</td>
+                                        <td>
+                                            <?= $form->field($model, 'deposit')->textInput()->label(false) ?>
+                                        </td>
+                                    </tr>
+                                <?php } else { ?>
+                                    <?= $form->field($model, 'deposit')->hiddenInput()->label(false) ?>
+                                <?php } ?>
+                                <?php if ($model->electric_price > 0) { ?>
+                                    <tr>
+                                        <td>ค่าไฟฟ้า</td>
+                                        <td><?= $form->field($model, 'electric_price')->textInput()->label(false) ?></td>
+                                    </tr>
+                                <?php } else { ?>
+                                    <?= $form->field($model, 'electric_price')->hiddenInput()->label(false) ?>
+                                <?php } ?>
+                                <?php if ($model->water_price > 0) { ?>
+                                    <tr>
+                                        <td>ค่าน้ำปะปา</td>
+                                        <td><?= $form->field($model, 'water_price')->textInput()->label(false) ?></td>
+                                    </tr>
+                                <?php } else { ?>
+                                    <?= $form->field($model, 'water_price')->hiddenInput()->label(false) ?>
+                                <?php } ?>
                                 <tr>
                                     <td><?= $form->field($model, 'additional_1')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
                                     <td><?= $form->field($model, 'additional_1_price')->textInput()->label(false) ?></td>
@@ -232,10 +180,9 @@ foreach ($config as $cfg){
             <?php
             $this->RegisterJs("
     $('document').ready(function(){
-         
-         WaterCal();
-         ElectricCal();
-          $('#" . Html::getInputId($model, 'deposit') . "').change(function(e){ 
+        
+        TotalCal();
+        $('#" . Html::getInputId($model, 'deposit') . "').change(function(e){ 
             deposit = parseInt($('#" . Html::getInputId($model, 'deposit') . "').val());
            if(isNaN(deposit)){
                 $('#" .Html::getInputId($model, 'deposit') . "').val(0); 
@@ -249,6 +196,21 @@ foreach ($config as $cfg){
             }
            TotalCal();
         });
+        $('#" . Html::getInputId($model, 'electric_price') . "').change(function(e){ 
+            electric_price = parseInt($('#" . Html::getInputId($model, 'electric_price') . "').val());
+           if(isNaN(electric_price)){
+                $('#" .Html::getInputId($model, 'electric_price') . "').val(0); 
+            }
+           TotalCal();
+        });
+        $('#" . Html::getInputId($model, 'water_price') . "').change(function(e){ 
+            water_price = parseInt($('#" . Html::getInputId($model, 'water_price') . "').val());
+           if(isNaN(water_price)){
+                $('#" .Html::getInputId($model, 'water_price') . "').val(0); 
+            }
+           TotalCal();
+        });
+        
         $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();
         });
@@ -320,6 +282,7 @@ foreach ($config as $cfg){
         function TotalCal(){
             var amount = 0;
             var room = 0;
+            var deposit = 0;
             var water_price = 0;
             var electric_price = 0;
             var a1 = 0;
@@ -331,6 +294,7 @@ foreach ($config as $cfg){
             
             amount = parseInt($('#" . Html::getInputId($model, 'total') . "').val());
             room = parseInt($('#" . Html::getInputId($model, 'rental') . "').val());
+            deposit = parseInt($('#" . Html::getInputId($model, 'deposit') . "').val());
             water_price = parseInt($('#" . Html::getInputId($model, 'water_price') . "').val());
             electric_price = parseInt($('#" . Html::getInputId($model, 'electric_price') . "').val());
             a1 = parseInt($('#" . Html::getInputId($model, 'additional_1_price') . "').val());
@@ -339,6 +303,9 @@ foreach ($config as $cfg){
             a4 = parseInt($('#" . Html::getInputId($model, 'additional_4_price') . "').val());
             a5 = parseInt($('#" . Html::getInputId($model, 'additional_5_price') . "').val());
             
+            if(!isNaN(deposit) && deposit.length != 0){
+                total += deposit;
+            }
             if(!isNaN(water_price) && water_price.length != 0){
                 total += water_price;
             }

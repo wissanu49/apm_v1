@@ -117,6 +117,7 @@ class ReceiptController extends Controller {
             $model->total = $data['total'];
             $model->comment = $data['comment'];
             $appointment = $data['appointment'];
+            $invoice_date = $data['invoice_date'];
                      
         }
         if ($model->load(Yii::$app->request->post())) {
@@ -144,6 +145,7 @@ class ReceiptController extends Controller {
                     'customer' => $dataCustomer,
                     'invoice' => $invoice,
                     'appointment' => $appointment,
+                    'invoice_date' => $invoice_date,
         ]);
     }
 

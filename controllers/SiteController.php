@@ -75,8 +75,9 @@ class SiteController extends Controller {
     public function actionReport() {
         $receipt = new \app\models\Receipt();
         $exp = new \app\models\Expenses();
-        
+        // สรุปยอดรายรับ
         $summary_report = $receipt->getSummary_income();
+        // สรุปยอดรายจ่าย
         $summary_exp = $exp->getSummary_exp();
         
         return $this->render('report',[

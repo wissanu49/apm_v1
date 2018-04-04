@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 /* @var $searchModel app\Models\SearchRooms */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'ห้องพัก';
+$this->title = Yii::$app->name.' : ห้องพัก';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -19,11 +19,6 @@ Modal::begin([
     'headerOptions' => ['id' => 'modalHeader'],
     'id' => 'modal',
     'size' => 'modal-lg',
-    'closeButton' => [
-        'id'=>'close-button',
-        'class' => 'btn btn-danger btn-sm pull-right',
-        'label' => 'Close',
-        ],
     //keeps from closing modal with esc key or by clicking out of the modal.
     // user must click cancel or X to close
     'clientOptions' => [
@@ -31,16 +26,24 @@ Modal::begin([
         ]
 ]);
 echo "<div id='modalContent'></div>";
+echo "<div id='modalFooter' style=\"text-align:right;\">";
+echo Html::button(' Closed ', ['value' => '',
+                        'id' => 'close-button',
+                        'class' => 'btn btn-danger fa fa-close',
+                        'data-dismiss' => 'modal',
+    ]);
+echo "</div>";
 Modal::end();
 ?>
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="box">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <div class="table-responsive">
                 <?php Pjax::begin(); ?>
                 <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
@@ -53,7 +56,7 @@ Modal::end();
                     ]);
                     ?>
                 </p>
-
+                
                 <?=
                 GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -69,7 +72,12 @@ Modal::end();
                                 return $model->building->building_name;
                             }
                         ],
-                        'name',
+                        [
+                            'attribute' => 'name',
+                            'value' => 'name',
+                            'format' => 'raw',
+                            'contentOptions'=>['style'=>'max-width: 80px;'],
+                        ],
                         //'daily_price',
                         //'monthly_price',
                         /*
@@ -137,9 +145,9 @@ Modal::end();
                                     ]);
                                 }else{
                                     
-                                    return Html::button(' ย้ายออก', ['value' => Url::to(['leasing/checkout', 'room' => $data->id]),
+                                    return Html::a(' ย้ายออก', ['leasing/checkout', 'room' => $data->id],[
                                                 'title' => 'ย้ายออก : ' . $data['name'],
-                                                'id' => 'showModalButton',
+                                                //'id' => 'showModalButton',
                                                 'class' => 'btn btn-danger fa fa-arrow-left',
                                     ]);
                                      
@@ -190,6 +198,7 @@ Modal::end();
                 ]);
                 ?>
                 <?php Pjax::end(); ?>
+                </div>
             </div>
         </div>
     </div>

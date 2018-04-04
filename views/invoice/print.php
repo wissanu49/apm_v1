@@ -8,18 +8,6 @@ $NumToString = new Numbertostring();
 /* @var $this yii\web\View */
 /* @var $model app\models\Invoice */
 /* @var $form yii\widgets\ActiveForm */
-$dataOption = [
-    'ค่าประกันห้อง (Deposit)' => 'ค่าประกันห้อง (Deposit)',
-    'ค่าส่วนกลาง (Facility)' => 'ค่าส่วนกลาง (Facility)',
-    'ค่าโทรศัพท์ (Telephone)' => 'ค่าโทรศัพท์ (Telephone)',
-    'ค่าเคเบิลทีวี (Cable TV)' => 'ค่าเคเบิลทีวี (Cable TV)',
-    'ค่าปรับ (Penalty fee)' => 'ค่าปรับ (Penalty fee)',
-    'ค่าซ่อมบำรุง (Maintenance)' => 'ค่าซ่อมบำรุง (Maintenance)',
-    'ค่าซ่อมบำรุง (Maintenance)' => 'ค่าซ่อมบำรุง (Maintenance)',
-    'ค่าเช่าเฟอร์นิเจอร์ (Furniture)' => 'ค่าเช่าเฟอร์นิเจอร์ (Furniture)',
-    'ค่าบริการ (Service)' => 'ค่าบริการ (Service)',
-    'ค้างจ่าย (Arrears)' => 'ค้างจ่าย (Arrears)',
-];
 
 foreach ($dataProvider as $data) {
     $inv_id = $data['id'];
@@ -51,12 +39,13 @@ foreach ($dataProvider as $data) {
     $cus_addr = $data['address'];
     $appointment = $data['appointment'];
     $comment = $data['comment'];
+    $invoice_date = $data['invoice_date'];
 }
 
 $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
 ?>
 <div class="row">
-    <div class="col-lg-12 ">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
         <div class="row">
             <div class="col-lg-12">
                 <table style="width: 100%">
@@ -77,8 +66,9 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                             <b>ที่อยู่ : </b><?= $cus_addr ?>
                         </td>
                         <td style="width: 50%; text-align: right;">
-                            
-                            <b>กำหนดชำระ: </b><?= $appointment ?>
+                            <b>วันที่ออกบิล : </b><?= Yii::$app->formatter->asDate($invoice_date) ?>
+                            <br><br>
+                            <b>กรุณาชำระก่อนวันที่ : </b><?= Yii::$app->formatter->asDate($appointment) ?>
                         </td>
                     </tr>
                 </table>

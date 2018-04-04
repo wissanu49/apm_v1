@@ -7,16 +7,17 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\EnergiesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'บันทึกหน่วยมิเตอร์ไฟฟ้า/ปะปา';
+$this->title = Yii::$app->name.' : บันทึกหน่วยมิเตอร์ไฟฟ้า/ปะปา';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="box">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <div class="table-responsive">
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -43,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
     <?php Pjax::end(); ?>
+                </div>
         </div>
     </div>
 </div> 

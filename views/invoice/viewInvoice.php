@@ -39,10 +39,12 @@ foreach ($dataProvider as $data) {
     $cus_addr = $data['address'];
     $appointment = $data['appointment'];
     $comment = $data['comment'];
+    $invoice_date = $data['invoice_date'];
 }
 
-$this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
+$this->title = Yii::$app->name . ' : ใบแจ้งหนี้เลขที่ : ' . $inv_id;
 ?>
+
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
@@ -73,8 +75,9 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                 <b>ที่อยู่ : </b><?= $cus_addr ?>
                             </div>
                             <div class="col-xs-6" style="text-align: right;">
-                                <br><br>
-                                <b>กำหนดชำระ : </b><?= $appointment ?>
+                                <br><b>วันที่ออกบิล : </b><?= Yii::$app->formatter->asDate($invoice_date) ?>
+                            <br>
+                            <b>กรุณาชำระก่อนวันที่ : </b><?= Yii::$app->formatter->asDate($appointment) ?>
                             </div>
                         </div>
                         <br>
@@ -222,7 +225,6 @@ $this->title = 'ใบแจ้งหนี้เลขที่ : ' . $inv_id;
                                 &nbsp;
                                 <?php
                                 echo Html::a(' พิมพ์ใบแจ้งหนี้', ['invoice/print', 'id' => $inv_id], ['target' => '_blank', 'class' => 'btn btn-info fa fa-print']);
-                                
                                 ?>
                                 &nbsp;
                                 <?php

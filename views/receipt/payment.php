@@ -20,7 +20,7 @@ $dataOption = [
     'ค้างจ่าย (Arrears)' => 'ค้างจ่าย (Arrears)',
 ];
 
-$this->title = 'ชำระเงิน';
+$this->title = Yii::$app->name . ' : ชำระเงิน';
 
 $dateCreate = date('Y-m-d H:i:s');
 ?>
@@ -65,8 +65,10 @@ $dateCreate = date('Y-m-d H:i:s');
                                 <b>ที่อยู่ : </b><?= $cus_addr; ?>
                             </div>
                             <div class="col-xs-6" style="text-align: right;">
-                                <br><br>
-                                <b>กำหนดชำระ : </b><?= Yii::$app->formatter->asDate($appointment) ?>
+                                <br>
+                                <b>วันที่ออกบิล : </b><?= Yii::$app->formatter->asDate($invoice_date) ?>
+                                <br>
+                                <b>ชำระก่อนวันที่ : </b><?= Yii::$app->formatter->asDate($appointment) ?>
                             </div>
                         </div>
                         <table class="table table-striped">
@@ -78,14 +80,14 @@ $dateCreate = date('Y-m-d H:i:s');
                                 <tr>
                                     <td>ค่าห้องพัก</td>
                                     <td>
-                                        <?= $form->field($model, 'rental')->textInput(['readonly' => 'readonly'])->label(false) ?>
+                                        <?= $form->field($model, 'rental')->textInput()->label(false) ?>
                                     </td>
                                 </tr>
                                 <?php if ($model->deposit > 0) { ?>
                                     <tr>
                                         <td>ค่าประกันห้อง</td>
                                         <td>
-                                            <?= $form->field($model, 'deposit')->textInput(['readonly' => 'readonly'])->label(false) ?>
+                                            <?= $form->field($model, 'deposit')->textInput()->label(false) ?>
                                         </td>
                                     </tr>
                                 <?php } else { ?>
@@ -94,7 +96,7 @@ $dateCreate = date('Y-m-d H:i:s');
                                 <?php if ($model->electric_price > 0) { ?>
                                     <tr>
                                         <td>ค่าไฟฟ้า</td>
-                                        <td><?= $form->field($model, 'electric_price')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
+                                        <td><?= $form->field($model, 'electric_price')->textInput()->label(false) ?></td>
                                     </tr>
                                 <?php } else { ?>
                                     <?= $form->field($model, 'electric_price')->hiddenInput()->label(false) ?>
@@ -102,7 +104,7 @@ $dateCreate = date('Y-m-d H:i:s');
                                 <?php if ($model->water_price > 0) { ?>
                                     <tr>
                                         <td>ค่าน้ำปะปา</td>
-                                        <td><?= $form->field($model, 'water_price')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
+                                        <td><?= $form->field($model, 'water_price')->textInput()->label(false) ?></td>
                                     </tr>
                                 <?php } else { ?>
                                     <?= $form->field($model, 'water_price')->hiddenInput()->label(false) ?>
@@ -183,6 +185,20 @@ $dateCreate = date('Y-m-d H:i:s');
     
         TotalCal();
           
+         $('#" . Html::getInputId($model, 'rental') . "').change(function(e){ 
+           room = parseInt($('#" . Html::getInputId($model, 'rental') . "').val());
+           if(isNaN(room)){
+            $('#" . Html::getInputId($model, 'room') . "').val(0);
+            }
+           TotalCal();
+        });
+        $('#" . Html::getInputId($model, 'deposit') . "').change(function(e){ 
+            deposit = parseInt($('#" . Html::getInputId($model, 'deposit') . "').val());  
+                 if(isNaN(deposit)){
+            $('#" . Html::getInputId($model, 'deposit') . "').val(0);
+            }
+           TotalCal();
+        });
         $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();
         });

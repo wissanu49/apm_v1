@@ -74,7 +74,7 @@ foreach ($config as $cfg){
                                 <tr>
                                     <td>ค่าห้องพัก</td>
                                     <td>
-                                        <?= $form->field($model, 'rental')->textInput(['readonly' => 'readonly'])->label(false) ?>
+                                        <?= $form->field($model, 'rental')->textInput()->label(false) ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -116,7 +116,7 @@ foreach ($config as $cfg){
 
 
                                     </td>
-                                    <td style="vertical-align: bottom;"><?= $form->field($model, 'electric_price')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
+                                    <td style="vertical-align: bottom;"><?= $form->field($model, 'electric_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -153,7 +153,7 @@ foreach ($config as $cfg){
                                             </tr>    
                                         </table>
                                     </td>
-                                    <td style="vertical-align: bottom;"><?= $form->field($model, 'water_price')->textInput(['readonly' => 'readonly'])->label(false) ?></td>
+                                    <td style="vertical-align: bottom;"><?= $form->field($model, 'water_price')->textInput()->label(false) ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $form->field($model, 'additional_1')->textInput(['placeholder' => 'ค่าใช้จ่านอื่น ๆ'])->label(false) ?></td>
@@ -247,6 +247,9 @@ foreach ($config as $cfg){
     
         WaterCal();
         ElectricCal();
+        $('#" . Html::getInputId($model, 'rental') . "').change(function(e){ 
+           TotalCal();
+        });
           
         $('#" . Html::getInputId($model, 'additional_1_price') . "').change(function(e){ 
            TotalCal();

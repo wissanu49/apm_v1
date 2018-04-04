@@ -5,12 +5,14 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\Models\SearchBuilding */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'ตึก/อาคาร';
+$this->title = Yii::$app->name.' : ตึก/อาคาร';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -20,16 +22,24 @@ Modal::begin([
     'size' => 'modal-lg',
 ]);
 echo "<div id='modalContent'></div>";
+echo "<div id='modalFooter' style=\"text-align:right;\">";
+echo Html::button(' Closed ', ['value' => '',
+                        'id' => 'close-button',
+                        'class' => 'btn btn-danger fa fa-close',
+                        'data-dismiss' => 'modal',
+    ]);
+echo "</div>";
 Modal::end();
 ?>
 
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="box">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <div class="table-responsive">
                 <?php Pjax::begin(); ?>
                 <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
@@ -50,7 +60,24 @@ Modal::end();
                     'columns' => [
                         ['class' => 'yii\grid\SerialColumn'],
                         //'id',
-                        'building_name',
+                        //'building_name',
+                        [
+                            'attribute' => 'building_name',
+                            'format' => 'text',
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'building_name',
+                                'data' => ArrayHelper::map(app\models\Building::find()->all(), 'building_name', 'building_name'),
+                                'theme' => Select2::THEME_BOOTSTRAP,
+                                //'hideSearch' => true,
+                                'options' => [
+                                    'placeholder' => 'ค้นหา...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ]),
+                        ],
                         'building_address',
                         [
                             'attribute' => '',
@@ -97,7 +124,7 @@ Modal::end();
                 ]);
                 ?>
                 <?php Pjax::end(); ?>
-
+                </div>
             </div>
         </div>
     </div>

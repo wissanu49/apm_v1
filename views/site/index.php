@@ -4,13 +4,13 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-$this->title = 'โปรแกรมหอพัก';
+$this->title = Yii::$app->name.' : DevbyMGS';
 ?>
 <?php
 foreach ($building as $build) {
     ?>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="box">
                 <div class="box-header">
                     <h4>อาคาร : <?= $build->building_name ?></h4>
@@ -21,7 +21,7 @@ foreach ($building as $build) {
                         $rooms = app\models\Rooms::find()->where(['building_id' => $build->id])->all();
                         foreach ($rooms as $r) {
                             ?>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-md-3 col-sm-3 col-xs-12">
                                 <div class="info-box">
                                     <?php
                                     if ($r->status == 'ว่าง') {
@@ -72,7 +72,7 @@ foreach ($building as $build) {
                                 <tr>
                                     <td><?= $inv->id ?></td>
                                     <td><?= $room_name ?></td>
-                                    <td><?= $inv->total ?></td>
+                                    <td><?= Yii::$app->formatter->asDecimal($inv->total) ?></td>
                                     <td><?= Yii::$app->formatter->asDate($inv->appointment) ?></td>
                                     <td><?= Html::a(' ชำระเงิน', ['receipt/payment', 'id' => $inv->id, 'leasing' => $inv->leasing_id], ['class' => 'btn btn-info fa fa-money']) ?></td>
                                 </tr>

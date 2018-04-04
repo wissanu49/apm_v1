@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $searchModel app\Models\SearchReceipt */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'ใบเสร็จรับเงิน';
+$this->title = Yii::$app->name.' : ใบเสร็จรับเงิน';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -20,16 +20,24 @@ Modal::begin([
     'size' => 'modal-lg',
 ]);
 echo "<div id='modalContent'></div>";
+echo "<div id='modalFooter' style=\"text-align:right;\">";
+echo Html::button(' Closed ', ['value' => '',
+                        'id' => 'close-button',
+                        'class' => 'btn btn-danger fa fa-close',
+                        'data-dismiss' => 'modal',
+    ]);
+echo "</div>";
 Modal::end();
 ?>
 
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="box">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <div class="table-responsive">
                 <?php Pjax::begin(); ?>
                 <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
@@ -102,7 +110,7 @@ Modal::end();
                 ]);
                 ?>
                 <?php Pjax::end(); ?>
-
+                </div>
             </div>
         </div>
     </div>

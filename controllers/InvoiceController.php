@@ -79,7 +79,7 @@ class InvoiceController extends Controller {
         $config = \app\models\Company::find()->all();
         if ($model->load(Yii::$app->request->post())) {
 
-            //die(print_r($_POST));
+            $model->invoice_date = date('Y-m-d H:i:s');
 
             try {
                 $transection = \Yii::$app->db->beginTransaction();
@@ -124,7 +124,7 @@ class InvoiceController extends Controller {
         $config = \app\models\Company::find()->all();
         if ($model->load(Yii::$app->request->post())) {
 
-            //die(print_r($_POST));
+            $model->invoice_date = date('Y-m-d H:i:s');
 
             try {
                 $transection = \Yii::$app->db->beginTransaction();
@@ -277,7 +277,7 @@ class InvoiceController extends Controller {
 
         if ($model->load(Yii::$app->request->post())) {
 
-            //die(print_r($_POST));
+           $model->invoice_date = date('Y-m-d H:i:s');
 
             try {
                 $transection = \Yii::$app->db->beginTransaction();
@@ -312,14 +312,38 @@ class InvoiceController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id) {
+        
         $model = $this->findModel($id);
+        //die(print_r($model));
+        //$leasing = \app\models\Leasing::find()->select('id')->where(['rooms_id' => $model->rooms_id, 'status'=>'IN'])->one();
+        $customer = \app\models\Leasing::find()->select('customers_id')->where(['id' => $model->leasing_id])->one();
+        //die(print_r($leasing));
+        $dataCustomer = \app\models\Customers::find()->where(['id' => $customer->customers_id])->all();
+        $config = \app\models\Company::find()->all();
+        
+        if ($model->load(Yii::$app->request->post())) {
+            
+            $transection = \Yii::$app->db->beginTransaction();
+            try{                
+                if($model->save()){
+                    Yii::$app->session->setFlash('success', 'บันทึกข้อมูลสำเร็จ');
+                    $transection->commit();
+                    //return $this->redirect(['view', 'id' => $model->id]);
+                }else{
+                    Yii::$app->session->setFlash('error', 'เกิดข้อผิดพลาด. กรุณาลองใหม่อีกครั้ง');
+                    $transection->rollBack();
+                }
+            } catch (Exception $ex) {
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            }
+            
         }
 
-        return $this->render('update', [
+        return $this->render('_update', [
                     'model' => $model,
+                    'customer' => $dataCustomer,
+                    'config' => $config,
+                    //'leasing' => $leasing,
         ]);
     }
 
