@@ -16,8 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 Modal::begin([
     'headerOptions' => ['id' => 'modalHeader'],
-    'id' => 'modal',
+    //'id' => 'modal',
     'size' => 'modal-lg',
+    'options' => [
+        'id' => 'modal',
+        'tabindex' => false
+    ],
 ]);
 echo "<div id='modalContent'></div>";
 echo "<div id='modalFooter' style=\"text-align:right;\">";
